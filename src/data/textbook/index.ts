@@ -1,7 +1,8 @@
 import type { TextbookSection } from '../../types';
+import { intro } from './intro';
 
 /**
- * 教本の全セクション。**まだ 1 節も書いていません。**
+ * 教本の全セクション。**入門編 4 節だけ書いてあります**（2026 年 9 月 15 日）。
  *
  * 書く順番は `docs/handover.md` の §2 にあります。
  * **出題範囲の洗い出し → 公開問題の分析 → 読者を決める → 章立ての確定 →
@@ -11,7 +12,7 @@ import type { TextbookSection } from '../../types';
  * ここで束ねてください。複数のエージェントを並行で走らせても衝突しません。
  * **並びは `CATEGORIES` と同じ順にすること。**目次の表示順がここで決まります。
  */
-export const SECTIONS: TextbookSection[] = [];
+export const SECTIONS: TextbookSection[] = [...intro];
 
 export const sectionById = (id: string): TextbookSection | undefined => SECTIONS.find((s) => s.id === id);
 

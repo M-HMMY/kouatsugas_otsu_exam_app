@@ -190,15 +190,20 @@ function isMulti() {
 // 危険物甲種版から持ってきたときも、50 個の ID が残っていた。
 //
 // 節を足す・減らすときは、`docs/section-plan.md` と合わせてここも直すこと。
-const ALL_SECTIONS = [];
+const ALL_SECTIONS = ['i-1', 'i-2', 'i-3', 'i-4'];
 
-const report = [];
-const show = (title, body) => report.push(`\n===== ${title} =====\n${body}`);
+// **その場で出す。**以前は最後にまとめて出していたが、途中で止まると
+// **出力が 1 文字も出ず、どこで止まったのか分からなかった。**
+// 筋書きが伸びるほど効くので、書いた順に流す。
+const show = (title, body) => {
+  console.log(`\n===== ${title} =====\n${body}`);
+};
 
 // ============================================================
 // 筋書き — ここだけ書き換えて使う
 //
-// **教本 50 節 / 確認問題 135 問 / 計算ドリル 5 種類 / 体験ウィジェット 3 個。**
+// **いまは入門編 4 節だけ**（2026 年 9 月 15 日）。確認問題・計算ドリル・
+// 体験ウィジェットはまだ 0 なので、その区間は「押せなかった」と出るのが正常。
 // 「全節を開く → 確認問題を解いて採点 → ドリル → 体験ツール → 模試」まで押す。
 // ============================================================
 
@@ -321,8 +326,12 @@ show('計算ドリルの一覧', (await visible()).slice(0, 600));
            return {
              choices: choices.length,
              labels: choices.map((c) => c.innerText.trim().slice(0, 28)),
+             // **★ テンプレートリテラルの中なので、正規表現のバックスラッシュは 2 つ重ねる。**
+             // 1 つだと JS が \s を s と解釈して /s+/g になり、**本文の s が全部消える。**
+             // 実際に src/data/drills.ts が「rc/data/drill .t」と報告に出た。
+             // 描画も検査も素通りするので、報告を目で読むまで気づけない。
              nan: /NaN|undefined|Infinity/.test(text),
-             head: text.slice(0, 220).replace(/\s+/g, ' '),
+             head: text.slice(0, 220).replace(/\\s+/g, ' '),
            };
          })()`,
       );
@@ -368,11 +377,20 @@ show('体験ツールの一覧', (await visible()).slice(0, 600));
 
 {
   const toolReport = [];
-  const ids = await evaluate(`window.__widgetIds ?? null`);
-  toolReport.push('教本に埋め込んだウィジェット: baisu / shoka / konsai');
+  // **★ ここは立ち上げのときに必ず空にすること。**
+  // 危険物甲種版から持ってきたときは、向こうの節 ID とウィジェット名
+  // （lw-4/baisu、lr-5/shoka、pg-2/konsai）が残っていた。**存在しない節を
+  // 開いて「描かれていない」と出るだけなので、目視では誤りに見えない。**
+  // 節に widget: を埋め込んだら、[節 ID, ウィジェット名] をここに足す。
+  const EMBEDDED = [];
+  toolReport.push(
+    EMBEDDED.length
+      ? '教本に埋め込んだウィジェット: ' + EMBEDDED.map(([, w]) => w).join(' / ')
+      : '教本に埋め込んだウィジェット: まだ無い',
+  );
 
   // 教本の節に埋め込んだものを、節ごと開いて操作する
-  for (const [sec, wid] of [['lw-4', 'baisu'], ['lr-5', 'shoka'], ['pg-2', 'konsai']]) {
+  for (const [sec, wid] of EMBEDDED) {
     await go(`#/textbook/${sec}`);
     const found = await evaluate(`document.querySelectorAll('.widget').length`);
     if (!found) {
@@ -421,7 +439,7 @@ show('体験ツールの一覧', (await visible()).slice(0, 600));
   show('体験ウィジェット（操作したあと）', toolReport.join('\n'));
 }
 
-// 確認問題。**105 問入ったので、実際に解いて採点まで押す。**
+// 確認問題。**入っていれば実際に解いて採点まで押す。**（いまは 0 問）
 await go('#/practice');
 show('確認問題の設定', (await visible()).slice(0, 500));
 {
@@ -479,4 +497,3 @@ show('模試の設定', (await visible()).slice(0, 900));
 // ============================================================
 
 show('コンソールエラー', errors.length ? errors.join('\n') : '(なし)');
-console.log(report.join('\n'));
