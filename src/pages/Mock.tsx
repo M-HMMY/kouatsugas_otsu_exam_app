@@ -38,11 +38,10 @@ const toItem = (q: Question): Item => ({ qid: q.id, categoryId: q.categoryId, q 
 /**
  * 模試の問題を作る。
  *
- * **科目ごとの問題数は公表されている**（法令 15 / 物化 10 / 性消 10）ので、科目の比率は本番どおりに作れる。
- * ただし**科目の中でどの章から何問出るかは公表されていない。**
- * 科目ごとの問題数は公表値（法令 15 / 物化 10 / 性消 10）なので、**科目の比率は本番どおり**にできる。
- * 科目の中でどの章から何問出るかは公表されていないので、そこは `categories.ts` の
- * `questions`（こちらの見立て）を重みにして抽選する。
+ * **科目ごとの問題数は公表されている**（法令 20 / 保安管理技術 15 / 学識 15）ので、
+ * 科目の比率は本番どおりに作れる。
+ * **ただし科目の中でどの章から何問出るかは公表されていない。**そこは `categories.ts` の
+ * `questions`（令和 7 年度の公開問題から起こした見立て）を重みにして抽選する。
  * 収録が足りない章があれば、その不足分は他章から補って総数だけは合わせる。
  *
  * `fields` を渡すと、その科目だけから作る（**科目免除の形式**で使う）。
@@ -80,12 +79,13 @@ function build(count: number, fields?: FieldId[]): Item[] {
 /**
  * 分野ごとの正解数。
  *
- * **この試験は合格基準が公表されている**ので、科目ごとに満たしたかどうかを出してよい。
+ * **この試験は合格基準が公表されている**ので、科目ごとの結果を出してよい。
  * 「各科目とも満点の 60 パーセント程度」（高圧ガス保安協会）。**「程度」を落とさないこと。**
- * 姉妹アプリは合格基準が非公表だったので合否を出さない方針だったが、この試験は違う。
+ * 姉妹アプリは合格基準が非公表だったので科目ごとの判定を出さない方針だったが、この試験は違う。
  *
- * **ただし出してよいのは「この模試の結果が基準を満たすか」まで。**
- * 収録した問題は本番ではないので、本番の合否を予想するものではない。
+ * **ただし出してよいのは「この模試の結果が 6 割に届いたか」まで。**
+ * 収録した問題は本番ではないし、基準そのものが「程度」で言い切られていない。
+ * **画面に「基準を満たす」と書かないこと**（`categories.ts` の `PASS_RATIO` の注記）。
  */
 function fieldScores(items: Item[], answers: number[][]): { id: FieldId; total: number; correct: number }[] {
   return FIELDS.filter((f) => f.questions > 0).map((f) => {
@@ -113,8 +113,9 @@ interface Config {
  * 出題セット。**本番は 1 区分 50 問を 270 分**（法令 60 / 保安管理技術 90 / 学識 120）。
  *
  * **★ この試験は、区分を選ばないと模試が作れない。**乙種化学と乙種機械は
- * 法令 20 問が共通で、保安管理技術と学識だけが違う。**受験者はどちらか一方しか受けない**ので、
- * 6 分野を全部混ぜた模試は本番と別物になる。だから本番形式を区分ごとに 2 つ置いている。
+ * **法令 20 問も保安管理技術 15 問も共通で、学識だけが違う**（`docs/public-questions.md` §1）。
+ * **受験者はどちらか一方の学識しか受けない**ので、学識を両方混ぜた模試は本番と別物になる。
+ * だから本番形式を区分ごとに 2 つ置いている。
  *
  * **本番形式では、科目の比率を本番どおりにすること**（法令 20 / 保安管理技術 15 / 学識 15）。
  * 科目ごとに 6 割程度という基準がある以上、比率が違うと判定の意味がなくなる。
@@ -122,7 +123,8 @@ interface Config {
  * **★ この試験には科目免除がある**（受験案内書 Ⅰ-10 と別紙）。危険物甲種には無かったので、
  * そちらから形式を写すと足りない。実際に多いのは次の 2 つ。
  *
- * - **乙種化学（機械）講習の検定に合格している** → 保安管理技術と学識が免除。**受験は法令だけ**
+ * - **乙種化学（機械）講習を修了している**（講習の検定に合格して**講習修了証**がある）
+ *   → 保安管理技術と学識が免除。**受験は法令だけ**
  * - **もう一方の区分の免状をすでに持っている** → 法令が免除。**受験は保安管理技術と学識だけ**
  *
  * この 2 つをそのまま形式にしてある。**「免除」という名前で出してよい。**
@@ -133,14 +135,14 @@ const PRESETS: (Config & { note: string })[] = [
     label: '本番形式（乙種化学）',
     count: EXAM_QUESTIONS,
     minutes: EXAM_MINUTES,
-    fields: ['law', 'hoan-kagaku', 'gaku-kagaku'],
+    fields: ['law', 'hoan', 'gaku-kagaku'],
     note: EXAM_QUESTIONS + ' 問 / ' + EXAM_MINUTES + ' 分。法令 20 / 保安管理技術 15 / 学識 15',
   },
   {
     label: '本番形式（乙種機械）',
     count: EXAM_QUESTIONS,
     minutes: EXAM_MINUTES,
-    fields: ['law', 'hoan-kikai', 'gaku-kikai'],
+    fields: ['law', 'hoan', 'gaku-kikai'],
     note: EXAM_QUESTIONS + ' 問 / ' + EXAM_MINUTES + ' 分。法令 20 / 保安管理技術 15 / 学識 15',
   },
   {
@@ -148,24 +150,24 @@ const PRESETS: (Config & { note: string })[] = [
     count: 20,
     minutes: 60,
     fields: ['law'],
-    note: '20 問 / 60 分。講習の検定に合格していると、受験するのはこの科目だけになります',
+    note: '20 問 / 60 分。講習を修了していると（講習修了証がある）、受験するのはこの科目だけになります',
   },
   {
     label: '保安管理技術＋学識（化学／法令が免除の人）',
     count: 30,
     minutes: 210,
-    fields: ['hoan-kagaku', 'gaku-kagaku'],
+    fields: ['hoan', 'gaku-kagaku'],
     note: '30 問 / 210 分。もう一方の区分の免状を持っていると、法令が免除されます',
   },
   {
     label: '保安管理技術＋学識（機械／法令が免除の人）',
     count: 30,
     minutes: 210,
-    fields: ['hoan-kikai', 'gaku-kikai'],
+    fields: ['hoan', 'gaku-kikai'],
     note: '30 問 / 210 分。もう一方の区分の免状を持っていると、法令が免除されます',
   },
-  { label: '短縮（化学）', count: 10, minutes: 54, fields: ['law', 'hoan-kagaku', 'gaku-kagaku'], note: '10 問 / 54 分。すきま時間に' },
-  { label: '短縮（機械）', count: 10, minutes: 54, fields: ['law', 'hoan-kikai', 'gaku-kikai'], note: '10 問 / 54 分。すきま時間に' },
+  { label: '短縮（化学）', count: 10, minutes: 54, fields: ['law', 'hoan', 'gaku-kagaku'], note: '10 問 / 54 分。すきま時間に' },
+  { label: '短縮（機械）', count: 10, minutes: 54, fields: ['law', 'hoan', 'gaku-kikai'], note: '10 問 / 54 分。すきま時間に' },
 ];
 
 interface Session {
@@ -279,7 +281,7 @@ export function Mock(): JSX.Element {
         <div className="preset-grid">
           {PRESETS.map((p) => {
             // 科目を絞る形式では、**その科目の収録数**で足りるかを見る。
-            // 全体の問題数で判定すると、性消が 10 問未満でも押せてしまう。
+            // 全体の問題数で判定すると、学識が 15 問に満たなくても押せてしまう。
             const pool =
               p.fields === undefined
                 ? QUESTIONS.length
@@ -319,11 +321,13 @@ export function Mock(): JSX.Element {
         </p>
         <p className="hint">
           <strong>合格基準は「各科目とも満点の {Math.round(PASS_RATIO * 100)} パーセント程度」です。</strong>
-          合計点ではありません。1 科目でも下回れば不合格になるので、この模試も科目ごとに出します。
+          合計点ではありません。<strong>1 科目でも 6 割に届かないと厳しい</strong>ので、この模試も科目ごとに結果を出します。
         </p>
         <p className="hint">
-          <strong>乙種化学と乙種機械は別の試験です。</strong>法令 20 問は共通ですが、
-          保安管理技術と学識は区分ごとに中身が違います。<strong>受ける区分の形式を選んでください</strong>（→{' '}
+          <strong>乙種化学と乙種機械は、受けるならどちらか一方です。</strong>ただし
+          <strong>違うのは学識だけ</strong>だと思ってください。法令 20 問は両区分で同じ問題が出ますし、
+          保安管理技術も、令和 7 年度は 15 問中 14 問が同じ問題でした。
+          <strong>受ける区分の形式を選んでください</strong>（→{' '}
           <button type="button" className="link-btn" onClick={() => navigate('textbook/i-1')}>
             この試験の形
           </button>
@@ -417,9 +421,11 @@ export function Mock(): JSX.Element {
         <section className="section">
           <h2>科目別の判定</h2>
           <p className="hint">
-            <strong>合格基準は「試験科目ごとの成績が、それぞれ {Math.round(PASS_RATIO * 100)} % 以上」</strong>と公表されています。
-            合計点ではないので、<strong>1 科目でも 6 割を切れば不合格</strong>です。下の表は科目ごとに基準を満たしたかを出しています。
-            ただし、これは<strong>この模試の結果</strong>であって、本番の合否予想ではありません。
+            <strong>合格基準は「各科目とも満点の {Math.round(PASS_RATIO * 100)} パーセント程度」</strong>と公表されています。
+            <strong>「以上」とは言い切られていません。</strong>合計点ではないので、
+            <strong>1 科目でも 6 割に届かないと厳しい</strong>と見てください。
+            下の表は、科目ごとに<strong>この模試で 6 割に届いたか</strong>を出しているだけです。
+            <strong>本番の合否を判定するものではありません。</strong>
           </p>
           {narrowed !== undefined && (
             <p className="hint">
@@ -435,7 +441,7 @@ export function Mock(): JSX.Element {
                   <th>科目</th>
                   <th>正解 / 出題</th>
                   <th>正答率</th>
-                  <th>基準 {Math.round(PASS_RATIO * 100)} %</th>
+                  <th>6 割に届いたか</th>
                 </tr>
               </thead>
               <tbody>
@@ -451,7 +457,7 @@ export function Mock(): JSX.Element {
                       <td>
                         {excluded ? '—' : f.total === 0 ? '出題なし' : `${Math.round((f.correct / f.total) * 100)}%`}
                       </td>
-                      <td>{excluded ? '対象外' : f.total === 0 ? '—' : met ? '満たす' : '満たさない'}</td>
+                      <td>{excluded ? '対象外' : f.total === 0 ? '—' : met ? '届いた' : '届かない'}</td>
                     </tr>
                   );
                 })}
