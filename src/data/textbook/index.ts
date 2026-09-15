@@ -1,5 +1,6 @@
 import type { TextbookSection } from '../../types';
 import { intro } from './intro';
+import { lawWhat } from './law-what';
 
 /**
  * 教本の全セクション。**入門編 4 節だけ書いてあります**（2026 年 9 月 15 日）。
@@ -12,7 +13,7 @@ import { intro } from './intro';
  * ここで束ねてください。複数のエージェントを並行で走らせても衝突しません。
  * **並びは `CATEGORIES` と同じ順にすること。**目次の表示順がここで決まります。
  */
-export const SECTIONS: TextbookSection[] = [...intro];
+export const SECTIONS: TextbookSection[] = [...intro, ...lawWhat];
 
 export const sectionById = (id: string): TextbookSection | undefined => SECTIONS.find((s) => s.id === id);
 
