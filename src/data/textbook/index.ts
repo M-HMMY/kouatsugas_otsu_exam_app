@@ -1,6 +1,10 @@
 import type { TextbookSection } from '../../types';
 import { intro } from './intro';
 import { lawWhat } from './law-what';
+import { lawPermit } from './law-permit';
+import { lawHandle } from './law-handle';
+import { lawPeople } from './law-people';
+import { lawVessel } from './law-vessel';
 
 /**
  * 教本の全セクション。**入門編 4 節だけ書いてあります**（2026 年 9 月 15 日）。
@@ -13,7 +17,7 @@ import { lawWhat } from './law-what';
  * ここで束ねてください。複数のエージェントを並行で走らせても衝突しません。
  * **並びは `CATEGORIES` と同じ順にすること。**目次の表示順がここで決まります。
  */
-export const SECTIONS: TextbookSection[] = [...intro, ...lawWhat];
+export const SECTIONS: TextbookSection[] = [...intro, ...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel];
 
 export const sectionById = (id: string): TextbookSection | undefined => SECTIONS.find((s) => s.id === id);
 
