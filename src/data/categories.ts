@@ -150,7 +150,7 @@ export const CATEGORIES: Category[] = [
     field: 'law',
     name: '製造の方法の技術上の基準',
     summary: '充塡のしかた、修理と作業計画、容器置場、除害と防爆',
-    syllabus: '法令（一般則 8 ほか）',
+    syllabus: '法令（一般則 6 第 2 項ほか）',
     questions: 4,
     intro: TODO,
   },
