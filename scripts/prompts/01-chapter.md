@@ -7,7 +7,7 @@
 
 1. `CLAUDE.md`
 2. `scripts/prompts/00-common.md`
-3. `scripts/prompts/10-chapter.md`（この文書）
+3. `scripts/prompts/01-chapter.md`（この文書）
 4. `scripts/prompts/【章の番号】-【章 ID】.md`（担当章の指示）
 
 ---

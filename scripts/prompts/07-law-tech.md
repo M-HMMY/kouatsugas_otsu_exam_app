@@ -27,7 +27,7 @@
 
 1. `CLAUDE.md`
 2. `scripts/prompts/00-common.md`
-3. `scripts/prompts/10-chapter.md`
+3. `scripts/prompts/01-chapter.md`
 4. **`src/data/textbook/intro.ts`**（文体の見本）
 5. **`docs/primary-numbers.md` §7・§8**（**保安距離。この章の核です**）
 
