@@ -19,7 +19,7 @@
 // 別の画面を見たいときは、いちばん下の「筋書き」だけ書き換える。
 
 import { spawn } from 'node:child_process';
-import { mkdtempSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -189,8 +189,23 @@ function isMulti() {
 // 前のアプリの節 ID が残っていると、**存在しない節を開いて全部「描けていない」になる。**
 // 危険物甲種版から持ってきたときも、50 個の ID が残っていた。
 //
-// 節を足す・減らすときは、`docs/section-plan.md` と合わせてここも直すこと。
-const ALL_SECTIONS = ['i-1', 'i-2', 'i-3', 'i-4'];
+// **★ 手で並べるのをやめました**（2026 年 9 月 18 日）。
+// 節が 4 本のうちは手で書けましたが、**67 本まで増えた**ところで、
+// 手で書き写す形そのものが上の 2 つの失敗（空のまま／前のアプリの ID が残る）を
+// 呼び込みます。**ソースから読むようにしたので、古くなりようがありません。**
+//
+// 教本のデータは TypeScript なので、ここでは**ただの文字列として**読みます。
+// `check-source.mjs` と同じ考え方で、壊れていても動きます。
+const ALL_SECTIONS = (() => {
+  const dir = 'src/data/textbook';
+  const ids = [];
+  for (const name of readdirSync(dir)) {
+    if (!name.endsWith('.ts') || name === 'index.ts') continue;
+    const text = readFileSync(join(dir, name), 'utf8');
+    for (const m of text.matchAll(/^\s*id: '([a-z]+-?\d+)',/gm)) ids.push(m[1]);
+  }
+  return ids;
+})();
 
 // **その場で出す。**以前は最後にまとめて出していたが、途中で止まると
 // **出力が 1 文字も出ず、どこで止まったのか分からなかった。**
