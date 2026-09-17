@@ -7,6 +7,10 @@ import { lawPeople } from './law-people';
 import { lawVessel } from './law-vessel';
 import { lawTech } from './law-tech';
 import { lawOpe } from './law-ope';
+import { hoBurn } from './ho-burn';
+import { hoMaterial } from './ho-material';
+import { hoInst } from './ho-inst';
+import { hoDevice } from './ho-device';
 
 /**
  * 教本の全セクション。**入門編 4 節だけ書いてあります**（2026 年 9 月 15 日）。
@@ -19,7 +23,7 @@ import { lawOpe } from './law-ope';
  * ここで束ねてください。複数のエージェントを並行で走らせても衝突しません。
  * **並びは `CATEGORIES` と同じ順にすること。**目次の表示順がここで決まります。
  */
-export const SECTIONS: TextbookSection[] = [...intro, ...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe];
+export const SECTIONS: TextbookSection[] = [...intro, ...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe, ...hoBurn, ...hoMaterial, ...hoInst, ...hoDevice];
 
 export const sectionById = (id: string): TextbookSection | undefined => SECTIONS.find((s) => s.id === id);
 
