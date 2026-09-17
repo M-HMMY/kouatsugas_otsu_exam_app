@@ -99,6 +99,42 @@ for (const root of ROOTS) {
           break; // 1 か所ぶんだけ挙げれば十分（直せば次が見える）
         }
       }
+
+      // --- 数式のバックスラッシュが 1 本のままになっていないか ---
+      //
+      // 本文はテンプレートリテラルの中にあるので、**TypeScript が先に食います。**
+      // `\f` は改ページ、`\s` や `\l` は単に s・l になる。つまり
+      //
+      //   \frac{1}{2}  → （改ページ）rac{1}{2}
+      //   \sqrt{2}     → sqrt{2}
+      //   \leq         → leq
+      //
+      // **2 本書けば 1 本が残ります。**
+      //
+      // `check.ts` は「波かっこが生で出ている」ほうで \frac と \sqrt を捕まえますが、
+      // **\leq のように波かっこを取らない命令はすり抜けます**
+      // （lw-30 で 8 件すり抜けました。2026 年 9 月 18 日）。
+      // 画面には `0leq X` と出るだけなので、目で見ても数式の崩れに気づけません。
+      // だから**ソースの側で、奇数本のバックスラッシュを数えて**弾きます。
+      // ★ 正規表現を文字列から組むときは、バックスラッシュが **2 本**要ります。
+      // `BS + '+'` だと「エスケープされた +」＝ 文字としての + になり、何も拾いません
+      // （最初にそう書いて、検査が黙って素通りしました）。
+      const oddBs = new RegExp(BS + BS + '+([a-zA-Z]+)', 'g');
+      let b;
+      while ((b = oddBs.exec(body)) !== null) {
+        const run = b[0].length - b[1].length;
+        if (run % 2 === 0) continue; // 2 本ならそのまま残る
+        problems.push({
+          file,
+          line: text.slice(0, start + b.index).split('\n').length,
+          text: body.slice(Math.max(0, b.index - 12), b.index + b[0].length + 4).replace(/\n/g, ' '),
+          why:
+            'バックスラッシュが ' + run + ' 本です。TypeScript が食うので ' +
+            BS + BS + b[1] + ' と 2 本で書いてください',
+        });
+        break; // 1 ファイル 1 件でよい（直せば次が見える）
+      }
+
       bodyOpen.lastIndex = end;
     }
   }
