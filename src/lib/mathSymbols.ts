@@ -24,6 +24,9 @@ export const SYMBOL: Record<string, string> = {
   forall: '∀', exists: '∃', emptyset: '∅', neg: '¬', land: '∧', lor: '∨',
   to: '→', rightarrow: '→', leftarrow: '←', mapsto: '↦',
   Rightarrow: '⇒', Leftarrow: '⇐', Leftrightarrow: '⇔', leftrightarrow: '↔',
+  // 化学平衡の矢印。**この試験の学識（化学）では必須**で、
+  // gk-13・gk-14・gk-29 が可逆反応をこれで書いている。
+  rightleftharpoons: '⇌', rightleftarrows: '⇄',
   odot: '⊙', otimes: '⊗', oplus: '⊕', star: '⋆', ast: '∗',
   angle: '∠', perp: '⊥', parallel: '∥', top: '⊤', bot: '⊥',
   mid: '∣', vert: '∣', Vert: '‖', lVert: '‖', rVert: '‖',

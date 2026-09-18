@@ -22,8 +22,25 @@ import { ACCENT, DECORATION, FUNCTION, SYMBOL } from './mathSymbols';
 /** バックスラッシュそのもの。リテラルで書くと編集経路によって壊れやすいので定数にする */
 const BACKSLASH = String.fromCharCode(92);
 
-/** `{...}` を対応を数えて取り出す。開き波かっこの位置を渡す */
+/**
+ * `{...}` を対応を数えて取り出す。開き波かっこの位置を渡す。
+ *
+ * **★ `open` に -1 が来ることがあります**（呼び出し側が `indexOf('{')` の
+ * 結果をそのまま渡し、波かっこが見つからなかったとき）。
+ * 素通しすると `src.slice(0)` ＝ **式まるごと**が中身になり、
+ * それを `render` に渡すので**無限再帰**します。`npm run check` は
+ * `Maximum call stack size exceeded` で落ち、**ブラウザなら固まります。**
+ *
+ * 実際に起きました（2026 年 9 月 18 日、`gk-14`）。
+ * `\frac` の分子と分母を改行して書いた式で、行の中に `{` が 1 つしかなく、
+ * 2 つめの `indexOf` が -1 を返しました。
+ */
 function takeGroup(src: string, open: number): { body: string; end: number } {
+  // 波かっこが無いときは `end: -1` を返し、**呼び出し側に判断させます。**
+  // ここで勝手に 0 を返すと、今度は呼び出し側の while が巻き戻って無限ループになります。
+  if (open < 0 || open >= src.length || src[open] !== '{') {
+    return { body: '', end: -1 };
+  }
   let depth = 0;
   for (let i = open; i < src.length; i++) {
     if (src[i] === '{') depth++;
@@ -65,7 +82,13 @@ function render(src: string, keyPrefix: string): ReactNode[] {
         if (name === 'frac') {
           // \frac{分子}{分母}
           const num = takeGroup(src, src.indexOf('{', i));
-          const den = takeGroup(src, src.indexOf('{', num.end));
+          const den = num.end < 0 ? { body: '', end: -1 } : takeGroup(src, src.indexOf('{', num.end));
+          if (num.end < 0 || den.end < 0) {
+            // 分子か分母が見つからない。**式をまるごと分母とみなして再帰すると固まる**ので、
+            // 命令名をそのまま出して先へ進みます（`npm run check` の「未知の命令」で見つかります）。
+            plain += BACKSLASH + name;
+            continue;
+          }
           flush();
           out.push(
             <span className="frac" key={`${keyPrefix}-f${n++}`}>
