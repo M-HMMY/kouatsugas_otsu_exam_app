@@ -38,10 +38,19 @@ jobs:
       - name: 型チェックとビルド
         run: npm run build
 
-      # enablement: true を付けると、Pages が未設定のリポジトリでも
-      # このステップが有効化まで行う。付けないと Settings → Pages → Source を
-      # 手で「GitHub Actions」にするまで、build は通るのに deploy だけが落ちる。
-      # 最初の 1 回しか効かない設定だが、その 1 回が分かりにくい落ち方をする。
+      # ★ enablement: true は効きません（2026 年 9 月 19 日に実測）。
+      #
+      # Pages サイトの作成（POST /repos/{owner}/{repo}/pages）には admin 権限が要り、
+      # ワークフローの GITHUB_TOKEN は pages: write までなので弾かれます。
+      #     Create Pages site failed.
+      #     Error: Resource not accessible by integration
+      # このステップ自体が落ちるので、build は緑にならず deploy は skipped になります。
+      #
+      # **push の前に、Settings → Pages → Build and deployment → Source を
+      # 「GitHub Actions」にしておくこと。**設定したあとは再実行が要ります
+      # （設定だけでは走りません。Actions タブの Run workflow か Re-run jobs）。
+      #
+      # 有効化済みのリポジトリでは、この指定は無害に通ります。
       - uses: actions/configure-pages@v5
         with:
           enablement: true

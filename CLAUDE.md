@@ -528,7 +528,7 @@ npm run build
 | 体験ウィジェット | **済**（2026 年 9 月 18 日）。**7 つ。**高圧ガスの判定／適用除外／状態方程式／圧縮係数／爆発範囲／理論空気量／薄肉円筒の応力。**教本の 9 か所に埋め込んである** |
 | 執筆プロンプト | **済**（2026 年 9 月 15 日）。`scripts/prompts/`。**共通 5 本 ＋ 章ごと 23 本。**節 ID 140 個を過不足なく配ってある。**★ `check.ts` が `00-common.md` の表を節 ID の正本として読んでいる** |
 | git | **済**（2026 年 9 月 19 日）。`main` を `origin` へ push 済み（**35 コミット**）。姉妹アプリ 8 本とも既定ブランチは `main` |
-| **公開** | **済**（2026 年 9 月 19 日）。<https://m-hmmy.github.io/kouatsugas_otsu_exam_app/>。`deploy.yml` の `enablement: true` が Pages を有効化するので、**手での設定は要らなかった** |
+| **公開** | **済**（2026 年 9 月 19 日）。<https://m-hmmy.github.io/kouatsugas_otsu_exam_app/>。**★ `enablement: true` は効かず、最初の 2 回は `configure-pages` で落ちた。Settings → Pages → Source を手で「GitHub Actions」にして、再実行して通った** |
 | **別の目でのレビュー** | **未。**学識（機械）5 章・確認問題 195 問・ドリル 13・ウィジェット 7 は、**書いた本人しか見ていない**。下の「次にやること」12 |
 
 ---
@@ -606,8 +606,14 @@ npm run build
   ```
 - **`.github/workflows/deploy.yml` の対象ブランチを、実際のブランチ名に合わせること。**
   このリポジトリは `main` に合わせてあります。
-  `actions/configure-pages` に `enablement: true` を入れてあるので、
-  **Pages の Source を手で設定しなくても、push すれば公開まで走ります**
+- **★ push の前に、Settings → Pages → Build and deployment → Source を
+  「GitHub Actions」にすること。**
+  **`actions/configure-pages` の `enablement: true` は代わりになりません**
+  （2026 年 9 月 19 日に実測。それまでここには「手で設定しなくてよい」と書いてありました）。
+  Pages サイトの作成には admin 権限が要り、ワークフローの `GITHUB_TOKEN` は
+  `pages: write` までなので、`Resource not accessible by integration` で落ちます。
+  **設定したあとは再実行が要ります**（Actions タブの Run workflow、または Re-run jobs）。
+  → [docs/handover.md](docs/handover.md) §7
 - **★ 前のアプリの試験名で、リポジトリ全体を grep すること。**
   `grep -rn -I '危険物' --exclude-dir=node_modules .` の 1 行で済みます。
   **甲種版は `index.html` の `<meta name="description">` と `scripts/launch.ps1`、

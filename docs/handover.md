@@ -781,10 +781,23 @@ def edit(path, pairs):
   リポジトリを作る前に push すると `Repository not found` になります。
   **エディタの UI からだと「消されたか、名前が変わったか、権限が無いか」と出る**ので、
   「作っていない」だとは読み取れません。**`git ls-remote origin` で切り分けてください**
-- **★ Pages の Source を設定する前に push すると、最初の実行は deploy で落ちます。**
-  build までは通るので、Actions が緑にならない理由が分かりにくい。
-  **`actions/configure-pages` に `enablement: true` を付けると、ワークフローが自分で有効化します。**
-  手動設定を残すなら、**push の前に設定を済ませておくほうが早い**
+- **★ Pages の Source は、push の前に手で「GitHub Actions」にすること。**
+  Settings → Pages → **Build and deployment** → Source です。**ここが既定のままだと、
+  何を足しても公開されません。**
+  **`actions/configure-pages` の `enablement: true` では代わりになりません**
+  （2026 年 9 月 19 日に 8 本目で実測）。Pages サイトの作成には **admin 権限**が要り、
+  ワークフローの `GITHUB_TOKEN` は `pages: write` までなので、
+  `Create Pages site failed. Error: Resource not accessible by integration` で落ちます。
+
+  | | `enablement` なし（7 本目） | `enablement: true`（8 本目） |
+  | --- | --- | --- |
+  | 落ちる場所 | **deploy** ステップ | **configure-pages** ステップ（build の中） |
+  | build の見え方 | **緑**なのに公開されない | 赤。deploy は skipped |
+  | 直し方 | **どちらも Source を手で設定する。同じ** |
+
+  **落ちる場所が前に移るだけで、手作業が消えるわけではありません。**
+  設定したあとは**再実行が要ります**（Actions タブの Run workflow、または Re-run jobs）。
+  push しただけでは走りません
 - **★ 公開されたか確かめるときに、GitHub API をポーリングしないこと。**
   未認証だと **1 時間あたり 60 回**で、間隔なしのループはすぐ使い切ります。
   **公開 URL を直接叩けば十分**です（`curl -o /dev/null -w '%{http_code}'`）。
