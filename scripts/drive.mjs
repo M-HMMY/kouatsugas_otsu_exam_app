@@ -302,10 +302,21 @@ for (const id of badSections.slice(0, 5)) {
 // digest.ts が機械的に抜き出す。**書式が崩れていれば、ここに出てこない。**
 await go('#/sheet');
 {
+  // **★ ここは 2026 年 9 月 18 日まで、黙って 0 を返す死んだ検査でした。**
+  // `.sheet-section` も `.sheet h3` も `.page h3` も、この画面には存在しません
+  // （`src/pages/Sheet.tsx` が使うのは `.sheet-block` と `.sheet-item`）。
+  // **節が 4 本のときも 80 本のときも「見出しの数: 0」と出る**ので、
+  // 数字を見ていても異常に気づけませんでした。
+  // **画面のクラス名を変えたら、ここも直すこと。**
   const n = await evaluate(
-    `document.querySelectorAll('.sheet-section, .sheet h3, .page h3').length`,
+    `JSON.stringify({
+       blocks: document.querySelectorAll('.sheet-block').length,
+       items: document.querySelectorAll('.sheet-item').length,
+     })`,
   );
-  show('直前チェックシート', `見出しの数: ${n}\n` + (await visible()).slice(0, 900));
+  const { blocks, items } = JSON.parse(n);
+  const bad = blocks === 0 || items === 0 ? '  ← 抜き出せていません' : '';
+  show('直前チェックシート', `節 ${blocks} / 項目 ${items}${bad}\n` + (await visible()).slice(0, 900));
 }
 
 // 計算ドリル。**この試験には計算問題が出る**ので、姉妹アプリと違って中身がある。
