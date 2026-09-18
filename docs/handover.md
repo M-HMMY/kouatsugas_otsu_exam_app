@@ -20,14 +20,14 @@
 
 | # | リポジトリ | 試験 | `check.ts` | プロンプト |
 | --- | --- | --- | --- | --- |
-| 1 | `C:\Dev\fe_exam_app` | 基本情報技術者 | 632 行（あとから移植） | 0 |
-| 2 | `C:\Dev\e_exam_app` | E資格（JDLA） | 401 行 | 0 |
-| 3 | `C:\Dev\itpassport_exam_app` | ITパスポート（IPA） | 480 行 | 10 |
-| 4 | `C:\Dev\g_exam_app` | G検定（JDLA） | 622 行 | 15 |
-| 5 | `C:\Dev\genai_passport_exam_app` | 生成AIパスポート（GUGA） | 662 行 | 16 |
-| 6 | `C:\Dev\kikenbutsu_otsu4_exam_app` | **危険物取扱者 乙種第4類**（消防試験研究センター） | 移植したところ | 4（要書き換え） |
-| 7 | `C:\Dev\kikenbutsu_kou_exam_app` | **危険物取扱者 甲種**（消防試験研究センター） | **820 行** | 4（甲種向けに改訂） |
-| 8 | `C:\Dev\kouatsugas_otsu_exam_app` | **高圧ガス製造保安責任者 乙種化学・乙種機械**（KHK） | 移植したところ | 4（要書き換え） |
+| 1 | `fe_exam_app` | 基本情報技術者 | 632 行（あとから移植） | 0 |
+| 2 | `e_exam_app` | E資格（JDLA） | 401 行 | 0 |
+| 3 | `itpassport_exam_app` | ITパスポート（IPA） | 480 行 | 10 |
+| 4 | `g_exam_app` | G検定（JDLA） | 622 行 | 15 |
+| 5 | `genai_passport_exam_app` | 生成AIパスポート（GUGA） | 662 行 | 16 |
+| 6 | `kikenbutsu_otsu4_exam_app` | **危険物取扱者 乙種第4類**（消防試験研究センター） | 移植したところ | 4（要書き換え） |
+| 7 | `kikenbutsu_kou_exam_app` | **危険物取扱者 甲種**（消防試験研究センター） | **820 行** | 4（甲種向けに改訂） |
+| 8 | `kouatsugas_otsu_exam_app` | **高圧ガス製造保安責任者 乙種化学・乙種機械**（KHK） | 移植したところ | 4（要書き換え） |
 
 **行数は 2026 年 9 月 12 日に、最新の検査を古い代へ戻したあとの値です。**
 下の「12. 直したら、必ず 5 本すべてを見る」を参照してください。
@@ -150,8 +150,11 @@
 
 ## 3. Codex に書かせる
 
+**リポジトリの直下で走らせます。**`--cd` は付けません
+（公開するリポジトリにローカルパスを残さないため）。
+
 ```bash
-codex exec --cd "C:/Dev/<repo>" --sandbox workspace-write --color never \
+codex exec --sandbox workspace-write --color never \
   -o out-02.txt - < scripts/prompts/02-xxx.md
 ```
 

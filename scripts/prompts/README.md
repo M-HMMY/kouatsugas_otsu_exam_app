@@ -97,8 +97,12 @@
 
 ## 使い方
 
+**リポジトリの直下で走らせてください。**`--cd` を付けていないので、
+**カレントディレクトリがそのまま作業対象**になります
+（公開するリポジトリにローカルパスを書かないため、絶対パスを外してあります）。
+
 ```bash
-codex exec --cd "C:/Dev/kouatsugas_otsu_exam_app" --sandbox workspace-write --color never \
+codex exec --sandbox workspace-write --color never \
   -o out-02.txt - < scripts/prompts/02-law-what.md
 ```
 
