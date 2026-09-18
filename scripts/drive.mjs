@@ -408,7 +408,11 @@ show('体験ツールの一覧', (await visible()).slice(0, 600));
   // （lw-4/baisu、lr-5/shoka、pg-2/konsai）が残っていた。**存在しない節を
   // 開いて「描かれていない」と出るだけなので、目視では誤りに見えない。**
   // 節に widget: を埋め込んだら、[節 ID, ウィジェット名] をここに足す。
-  const EMBEDDED = [];
+  const EMBEDDED = [
+  ['lw-2', 'kouatsu-hantei'],
+  ['ho-1', 'bakuhatsu-hani'],
+  ['gm-18', 'usuniku-ouryoku'],
+];
   toolReport.push(
     EMBEDDED.length
       ? '教本に埋め込んだウィジェット: ' + EMBEDDED.map(([, w]) => w).join(' / ')
