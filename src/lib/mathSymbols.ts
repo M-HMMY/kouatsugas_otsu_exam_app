@@ -19,6 +19,8 @@ export const SYMBOL: Record<string, string> = {
   times: '×', cdot: '·', div: '÷', pm: '±', mp: '∓', circ: '∘',
   le: '≤', leq: '≤', ge: '≥', geq: '≥', ne: '≠', neq: '≠',
   approx: '≈', simeq: '≃', equiv: '≡', propto: '∝', sim: '∼', ll: '≪', gg: '≫',
+  // ほぼ等しい。日本語の理工書は ≒ を使うので、LaTeX の名前から引けるようにしておく
+  fallingdotseq: '≒', doteq: '≒',
   in: '∈', notin: '∉', subset: '⊂', subseteq: '⊆', supset: '⊃',
   cup: '∪', cap: '∩', setminus: '∖',
   forall: '∀', exists: '∃', emptyset: '∅', neg: '¬', land: '∧', lor: '∨',
@@ -72,7 +74,7 @@ export const FUNCTION = new Set([
 ]);
 
 /** `\frac{分子}{分母}` と `\sqrt{中身}` は個別に組み立てる */
-export const SPECIAL = new Set(['frac', 'sqrt']);
+export const SPECIAL = new Set(['frac', 'dfrac', 'sqrt']);
 
 /** この名前で書ける命令かどうか。`npm run check` の書き間違い検出に使う */
 export function isKnownCommand(name: string): boolean {

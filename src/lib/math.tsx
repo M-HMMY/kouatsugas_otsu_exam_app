@@ -79,7 +79,9 @@ function render(src: string, keyPrefix: string): ReactNode[] {
       if (m) {
         const name = m[1];
         i += m[0].length;
-        if (name === 'frac') {
+        // dfrac は LaTeX では display 用の分数だが、この教本は 1 種類しか
+        // 描き分けないので frac と同じ扱いにする。
+        if (name === 'frac' || name === 'dfrac') {
           // \frac{分子}{分母}
           const num = takeGroup(src, src.indexOf('{', i));
           const den = num.end < 0 ? { body: '', end: -1 } : takeGroup(src, src.indexOf('{', num.end));
