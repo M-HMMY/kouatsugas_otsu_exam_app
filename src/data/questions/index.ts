@@ -13,6 +13,15 @@ import { hoDevice } from './ho-device';
 import { hoSeal } from './ho-seal';
 import { hoSafety } from './ho-safety';
 import { hoManage } from './ho-manage';
+import { gkState } from './gk-state';
+import { gkReact } from './gk-react';
+import { gkBurn } from './gk-burn';
+import { gkGas } from './gk-gas';
+import { gmThermo } from './gm-thermo';
+import { gmFlow } from './gm-flow';
+import { gmStrength } from './gm-strength';
+import { gmMaterial } from './gm-material';
+import { gmDevice } from './gm-device';
 
 /**
  * 確認問題の全体。**まだ 1 問も書いていません。**
@@ -39,7 +48,7 @@ import { hoManage } from './ho-manage';
  * **保安管理技術と学識は、化学と機械で別に持ちます。**
  * **入門編（intro）には問題を付けない。**試験範囲外だからです。
  */
-export const QUESTIONS: Question[] = [...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe, ...hoBurn, ...hoMaterial, ...hoInst, ...hoDevice, ...hoSeal, ...hoSafety, ...hoManage];
+export const QUESTIONS: Question[] = [...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe, ...hoBurn, ...hoMaterial, ...hoInst, ...hoDevice, ...hoSeal, ...hoSafety, ...hoManage, ...gkState, ...gkReact, ...gkBurn, ...gkGas, ...gmThermo, ...gmFlow, ...gmStrength, ...gmMaterial, ...gmDevice];
 
 export const questionById = (id: string): Question | undefined => QUESTIONS.find((q) => q.id === id);
 
