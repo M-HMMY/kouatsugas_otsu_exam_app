@@ -4,6 +4,8 @@ import { lawPermit } from './law-permit';
 import { lawHandle } from './law-handle';
 import { lawPeople } from './law-people';
 import { lawVessel } from './law-vessel';
+import { lawTech } from './law-tech';
+import { lawOpe } from './law-ope';
 
 /**
  * 確認問題の全体。**まだ 1 問も書いていません。**
@@ -30,7 +32,7 @@ import { lawVessel } from './law-vessel';
  * **保安管理技術と学識は、化学と機械で別に持ちます。**
  * **入門編（intro）には問題を付けない。**試験範囲外だからです。
  */
-export const QUESTIONS: Question[] = [...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel];
+export const QUESTIONS: Question[] = [...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe];
 
 export const questionById = (id: string): Question | undefined => QUESTIONS.find((q) => q.id === id);
 
