@@ -316,6 +316,53 @@ for (const root of ROOTS) {
   }
 }
 
+// --- 合格基準を「以上」と言い切っていないか ---
+//
+// **この試験の合格基準は「各科目とも満点の 60 パーセント程度」で、「以上」ではありません。**
+// 姉妹アプリ（危険物取扱者試験）は「それぞれ 60 % 以上」と言い切っていたので、
+// **移植した画面に、向こうの言い回しがそのまま残ります。**
+//
+// 実際に残っていました（2026 年 9 月 19 日、`src/pages/Stats.tsx`）。
+// 「合格には 3 科目それぞれで 60 % 以上が必要です。」と出ていて、
+// **CLAUDE.md が「基準を満たすと書かないこと」と名指ししている当のことを、
+// アプリ自身が画面でやっていました。**型でもビルドでも検査でも止まらず、
+// 起動して読んで初めて見つかっています。
+//
+// 「『6 割以上』と言い切られていません」のような**打ち消しの文**は通します。
+// 弾くのは、**基準そのものを「以上」で言い切っている**書き方だけです。
+{
+  const uiRoots = ['src/pages', 'src/components'];
+  const BAD = [
+    /(?:60\s*%|６０％|60\s*パーセント|6\s*割)\s*以上[がを]?\s*(?:必要|要る|求め)/,
+    /基準を満たす/,
+    /合格(?:基準)?(?:に|は)[^。]{0,20}以上[がを]?\s*必要/,
+  ];
+  for (const root of uiRoots) {
+    let files;
+    try {
+      files = listSrc(root, ['.tsx', '.ts']);
+    } catch {
+      continue;
+    }
+    for (const file of files) {
+      const lines = readFileSync(file, 'utf8').split('\n');
+      lines.forEach((line, i) => {
+        // コメント行は対象外（なぜ「以上」と書いてはいけないかを説明している箇所がある）
+        const t = line.trim();
+        if (t.startsWith('*') || t.startsWith('//')) return;
+        if (BAD.some((re) => re.test(line))) {
+          problems.push({
+            file,
+            line: i + 1,
+            text: t.slice(0, 80),
+            why: '合格基準を「以上」と言い切っています（この試験は「60 パーセント程度」です）',
+          });
+        }
+      });
+    }
+  }
+}
+
 if (problems.length > 0) {
   console.error('--- 束ねる前の検査で見つかりました（' + problems.length + ' 件）---');
   for (const p of problems) {
@@ -335,6 +382,11 @@ if (problems.length > 0) {
   if (problems.some((p) => p.why.includes('更新関数'))) {
     console.error('記録は更新関数の外で 1 回だけ呼んでください。');
     console.error('正しい形は src/pages/Practice.tsx の submit にあります。');
+  }
+  if (problems.some((p) => p.why.includes('合格基準'))) {
+    console.error('合格基準は「各科目とも満点の 60 パーセント程度」です（受験案内書 Ⅰ-7）。');
+    console.error('姉妹アプリ（危険物取扱者試験）の「それぞれ 60 % 以上」を写さないでください。');
+    console.error('画面に出せるのは「この模試で 6 割に届いたか」までです（CLAUDE.md「変えないこと」）。');
   }
   if (problems.some((p) => p.why.includes('オリジン'))) {
     console.error('localStorage と Cache Storage はオリジン単位です。姉妹アプリを同じ github.io に並べると共有します。');

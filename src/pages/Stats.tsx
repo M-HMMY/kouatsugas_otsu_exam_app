@@ -100,9 +100,9 @@ export function Stats(): JSX.Element {
         <h2>科目別の正答率</h2>
         <p className="hint">
           目標の正答率 {Math.round(TARGET_RATE * 100)}% に届いていない章を強調しています。「未解答」はまだ一度も解いていない問題数で、ここが残っているうちは正答率が安定しません。
-          <strong>合格には 3 科目それぞれで 60 % 以上が必要です。</strong>合計点ではないので、
-          いちばん低い科目がそのまま合否を決めます。ここに出るのは学習記録から数えた正答率で、
-          本番の合否を予想するものではありません。
+          <strong>合格基準は、3 科目とも満点の 60 パーセント程度です。</strong>
+          「以上」とは言い切られていません。合計点でもないので、いちばん低い科目がそのまま効いてきます。
+          ここに出るのは学習記録から数えた正答率で、本番の合否を予想するものではありません。
         </p>
         {FIELDS.filter((field) =>
           categoriesOfField(field.id).some((c) => QUESTIONS.some((q) => q.categoryId === c.id)),
