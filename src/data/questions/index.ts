@@ -6,6 +6,13 @@ import { lawPeople } from './law-people';
 import { lawVessel } from './law-vessel';
 import { lawTech } from './law-tech';
 import { lawOpe } from './law-ope';
+import { hoBurn } from './ho-burn';
+import { hoMaterial } from './ho-material';
+import { hoInst } from './ho-inst';
+import { hoDevice } from './ho-device';
+import { hoSeal } from './ho-seal';
+import { hoSafety } from './ho-safety';
+import { hoManage } from './ho-manage';
 
 /**
  * 確認問題の全体。**まだ 1 問も書いていません。**
@@ -32,7 +39,7 @@ import { lawOpe } from './law-ope';
  * **保安管理技術と学識は、化学と機械で別に持ちます。**
  * **入門編（intro）には問題を付けない。**試験範囲外だからです。
  */
-export const QUESTIONS: Question[] = [...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe];
+export const QUESTIONS: Question[] = [...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe, ...hoBurn, ...hoMaterial, ...hoInst, ...hoDevice, ...hoSeal, ...hoSafety, ...hoManage];
 
 export const questionById = (id: string): Question | undefined => QUESTIONS.find((q) => q.id === id);
 
