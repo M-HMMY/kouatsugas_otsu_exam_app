@@ -387,7 +387,7 @@ export const DRILLS: Drill[] = [
       const t = pick([8, 10, 12, 16, 20]);
       const s = (p * d) / (2 * t);
       const fmt = (n: number): string => fx(n, 1) + ' MPa';
-      const { choices, answer } = buildNumeric(s, fmt, [(p * d) / (4 * t), (p * d) / t, (p * t) / (2 * d)]);
+      const { choices, answer } = buildNumeric(s, fmt, [(p * d) / (4 * t), (p * d) / t, (p * d) / (8 * t)]);
       return {
         question:
           '内径 ' + d + ' mm、板厚 ' + t + ' mm の薄肉円筒胴に、内圧 ' + fx(p, 1) +
