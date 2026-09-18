@@ -22,6 +22,7 @@ import { gmThermo } from './gm-thermo';
 import { gmFlow } from './gm-flow';
 import { gmStrength } from './gm-strength';
 import { gmMaterial } from './gm-material';
+import { gmDevice } from './gm-device';
 
 /**
  * 教本の全セクション。**入門編 4 節だけ書いてあります**（2026 年 9 月 15 日）。
@@ -34,7 +35,7 @@ import { gmMaterial } from './gm-material';
  * ここで束ねてください。複数のエージェントを並行で走らせても衝突しません。
  * **並びは `CATEGORIES` と同じ順にすること。**目次の表示順がここで決まります。
  */
-export const SECTIONS: TextbookSection[] = [...intro, ...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe, ...hoBurn, ...hoMaterial, ...hoInst, ...hoDevice, ...hoSeal, ...hoSafety, ...hoManage, ...gkState, ...gkReact, ...gkBurn, ...gkGas, ...gmThermo, ...gmFlow, ...gmStrength, ...gmMaterial];
+export const SECTIONS: TextbookSection[] = [...intro, ...lawWhat, ...lawPermit, ...lawHandle, ...lawPeople, ...lawVessel, ...lawTech, ...lawOpe, ...hoBurn, ...hoMaterial, ...hoInst, ...hoDevice, ...hoSeal, ...hoSafety, ...hoManage, ...gkState, ...gkReact, ...gkBurn, ...gkGas, ...gmThermo, ...gmFlow, ...gmStrength, ...gmMaterial, ...gmDevice];
 
 export const sectionById = (id: string): TextbookSection | undefined => SECTIONS.find((s) => s.id === id);
 
