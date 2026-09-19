@@ -363,6 +363,67 @@ for (const root of ROOTS) {
   }
 }
 
+// --- 法令の問題に、本番と同じ前置きが出るか ---
+//
+// **令和 7 年度の公開問題は、法令の問 1 の前に 3 つの宣言を置いています**
+// （docs/public-questions.md「法令の問題文に必ず置かれている前置き」）。
+// 同文書は「自前の問題でも同じ前置きを置くこと」と書いています。
+//
+// **★ これは飾りではありません。**2026 年 9 月 20 日のレビューで、
+// 容器への充塡の要件（法 48 条 1 項・2 項）を問う記述が、**同条 5 項の
+// 「経済産業大臣が危険のおそれがないと認め、条件を付して許可した場合」を
+// 落としている**と指摘されました。前置きが無いと、この種の記述を
+// 「例外なく正しい」と言えません。**同じ形の例外は法令のあちこちにあります。**
+//
+// 画面から消えても型でもビルドでも止まらないので、ここで見張ります。
+{
+  const cats = readFileSync('src/data/categories.ts', 'utf8');
+  const card = readFileSync('src/components/QuestionCard.tsx', 'utf8');
+  const lines = (cats.match(/export const LAW_PREAMBLE[^;]*;/s) ?? [''])[0];
+  if (!lines) {
+    problems.push({
+      file: 'src/data/categories.ts',
+      line: 1,
+      text: 'LAW_PREAMBLE',
+      why: '法令の前置き（LAW_PREAMBLE）がありません',
+    });
+  } else {
+    // 基準日・大臣の認定・都道府県知事等の 3 つがそろっているか
+    for (const [word, what] of [
+      ['令和 8 年 4 月 1 日', '基準日'],
+      ['危険のおそれがないと認めた', '経済産業大臣の認定（法 48 条 5 項などの例外）'],
+      ['都道府県知事等', '「都道府県知事等」の定義'],
+    ]) {
+      if (!lines.includes(word)) {
+        problems.push({
+          file: 'src/data/categories.ts',
+          line: 1,
+          text: 'LAW_PREAMBLE',
+          why: '法令の前置きに' + what + 'がありません',
+        });
+      }
+    }
+  }
+  // **★ import 行の LAW_PREAMBLE を数えないこと。**
+  // 最初にこう書いたら、画面から前置きを丸ごと消しても通ってしまった。
+  // 実際に並べているところ（.map）を見る。
+  if (!/LAW_PREAMBLE\.map\(/.test(card)) {
+    problems.push({
+      file: 'src/components/QuestionCard.tsx',
+      line: 1,
+      text: 'QuestionCard',
+      why: '法令の前置きを画面に出していません（LAW_PREAMBLE を描いてください）',
+    });
+  } else if (!/fieldOfCategory\(q\.categoryId\) === 'law'/.test(card)) {
+    problems.push({
+      file: 'src/components/QuestionCard.tsx',
+      line: 1,
+      text: 'QuestionCard',
+      why: '法令の前置きを法令の問題だけに絞っていません',
+    });
+  }
+}
+
 if (problems.length > 0) {
   console.error('--- 束ねる前の検査で見つかりました（' + problems.length + ' 件）---');
   for (const p of problems) {
@@ -387,6 +448,11 @@ if (problems.length > 0) {
     console.error('合格基準は「各科目とも満点の 60 パーセント程度」です（受験案内書 Ⅰ-7）。');
     console.error('姉妹アプリ（危険物取扱者試験）の「それぞれ 60 % 以上」を写さないでください。');
     console.error('画面に出せるのは「この模試で 6 割に届いたか」までです（CLAUDE.md「変えないこと」）。');
+  }
+  if (problems.some((p) => p.why.includes('前置き'))) {
+    console.error('法令の問題には、本番と同じ 3 つの宣言を置いてください（docs/public-questions.md）。');
+    console.error('とくに「経済産業大臣が危険のおそれがないと認めた場合等」は、法 48 条 5 項のような');
+    console.error('ただし書の例外を前提から外すためのもので、これが無いと記述の正誤が決まりません。');
   }
   if (problems.some((p) => p.why.includes('オリジン'))) {
     console.error('localStorage と Cache Storage はオリジン単位です。姉妹アプリを同じ github.io に並べると共有します。');

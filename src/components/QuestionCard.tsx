@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import type { Question } from '../types';
 import { ChoiceList, CHOICE_LABELS } from './ChoiceList';
-import { categoryName } from '../data/categories';
+import { LAW_PREAMBLE, categoryName, fieldOfCategory } from '../data/categories';
 import { Markdown } from '../lib/markdown';
 import { sectionById } from '../data/textbook';
 import { navigate } from '../lib/router';
@@ -51,6 +51,10 @@ export function QuestionCard({
   hideResult = false,
 }: Props): JSX.Element {
   const section = q.sectionId ? sectionById(q.sectionId) : undefined;
+  // 法令の問題には、本番と同じ前置きを置く。**飾りではない。**
+  // これが無いと、ただし書で例外が用意されている記述（法 48 条 5 項など）を
+  // 「例外なく正しい」と言えなくなる。`LAW_PREAMBLE` の注記を読むこと。
+  const isLaw = fieldOfCategory(q.categoryId) === 'law';
   const multi = isMultiAnswer(q.answer);
   const right = answerIndices(q.answer);
   const isCorrect = isCorrectAnswer(q.answer, selected);
@@ -67,6 +71,14 @@ export function QuestionCard({
         </div>
         {counter && <span className="counter">{counter}</span>}
       </header>
+
+      {isLaw && (
+        <ul className="law-preamble">
+          {LAW_PREAMBLE.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      )}
 
       <div className="qbody">
         <Markdown source={q.question} />

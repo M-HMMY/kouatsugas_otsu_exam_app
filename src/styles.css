@@ -2853,3 +2853,21 @@ textarea {
   display: block;
   margin-top: 2px;
 }
+
+/*
+  法令の問題の前置き。**本番の問題冊子で問 1 の前に宣言されている 3 つ。**
+  読み飛ばしてよいものなので、本文より一段弱く出す。
+*/
+.law-preamble {
+  margin: 0 0 12px;
+  padding: 10px 14px 10px 30px;
+  border-left: 3px solid var(--border);
+  background: var(--surface-sub, transparent);
+  color: var(--text-sub);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.law-preamble li + li {
+  margin-top: 4px;
+}
