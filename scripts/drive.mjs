@@ -525,10 +525,23 @@ show('確認問題の設定', (await visible()).slice(0, 500));
 {
   const report = [];
   for (const [cat, want] of [['law-what', true], ['gk-state', false]]) {
+    // **★ 間にホームを挟むこと。**#/practice から #/practice?cat=... へ移っても
+    // 同じページなので React が再マウントせず、useState の初期値（?cat=）が読み直されない。
+    // 最初にこう書いたら、章を選べていないのに「前置きが出ない」と言われた。
+    await go('#/home');
+    await sleep(250);
     await go(`#/practice?cat=${cat}`);
-    await sleep(400);
+    await sleep(500);
     await click('問を開始する');
-    await sleep(700);
+    await sleep(800);
+    // どの章の問題が出ているかも一緒に見る。前置きが出ない原因が
+    // 「法令ではない問題が出ている」なのか「前置きの実装が壊れた」なのかを分けるため。
+    const shownCat = await evaluate(
+      `(() => {
+         const el = document.querySelector('.qcard .tag-cat');
+         return el ? el.innerText.trim() : '(問題が出ていない)';
+       })()`,
+    );
     const found = await evaluate(
       `(() => {
          const el = document.querySelector('.law-preamble');
@@ -537,7 +550,7 @@ show('確認問題の設定', (await visible()).slice(0, 500));
     );
     const ok = want ? found !== '' : found === '';
     report.push(
-      `${cat}: 前置き ${found === '' ? 'なし' : 'あり'}` +
+      `${cat}（画面の章: ${shownCat}）: 前置き ${found === '' ? 'なし' : 'あり'}` +
         (ok ? '' : `  ★ ${want ? '出るはず' : '出ないはず'}`) +
         (found === '' ? '' : `  「${found}…」`),
     );

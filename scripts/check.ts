@@ -939,6 +939,59 @@ for (const q of QUESTIONS) {
   q.choices.forEach((c) => checkMath(`問題 ${q.id}`, c));
 }
 
+// ---- 解説の言う正誤と、answer が指す選択肢が一致しているか ----
+//
+// **この試験の設問は「イ・ロ・ハ（・ニ）のうち正しいものの組合せ」**なので、
+// 解説は必ず記号ごとに正誤を述べている。**その言い分と answer がずれていないか**を見る。
+//
+// **★ 実際に 2 問ずれていた**（2026 年 9 月 20 日）。
+// gm-device-1 と gm-device-7 は、解説が「ハは誤り」と書いているのに
+// answer が「イ、ロ、ハ」を指していた。**正解したのに不正解と判定される。**
+// 型でもビルドでも止まらず、問題文を読んでいるだけでも気づけない。
+// 解説と選択肢を突き合わせて初めて出る。
+{
+  const LETTERS = 'イロハニ';
+  /** 解説から、記号ごとの「正しい/誤り」を読む */
+  const verdicts = (expl: string): Map<string, boolean> => {
+    const v = new Map<string, boolean>();
+    for (const seg of expl.split(LF)) {
+      const body = seg.replace(/^[★\s]+/, '');
+      // 「イ、ロ、ハはいずれも正しい」「イとロは正しい」「ハとニはいずれも誤り」
+      const m = /^((?:[イロハニ](?:、|と|及び|・)?)+)は(?:いずれも)?(正しい|誤り|正しくない)/.exec(body);
+      if (m) {
+        const ok = m[1 + 1] === '正しい';
+        for (const ch of m[1]) if (LETTERS.includes(ch)) v.set(ch, ok);
+        continue;
+      }
+      for (const mm of body.matchAll(/(?:^|。)[★\s]*([イロハニ])(?:は|も)(正しい|誤り|正しくない)/g)) {
+        v.set(mm[1], mm[2] === '正しい');
+      }
+    }
+    return v;
+  };
+
+  for (const q of QUESTIONS) {
+    // 記述が並ぶ形の設問だけを見る
+    const letters = [...LETTERS].filter((l) => q.question.includes(LF + l + '．'));
+    if (letters.length < 3) continue;
+    if (isMultiAnswer(q.answer)) continue;
+    const picked = q.choices[q.answer as number] ?? '';
+    const right = new Set([...LETTERS].filter((l) => picked.includes(l)));
+    const v = verdicts(q.explanation);
+    for (const l of letters) {
+      const said = v.get(l);
+      if (said === undefined) {
+        warn(`問題 ${q.id}: 解説が記述 ${l} の正誤を述べていません`);
+      } else if (said !== right.has(l)) {
+        err(
+          `問題 ${q.id}: 解説は記述 ${l} を「${said ? '正しい' : '誤り'}」と書いているのに、` +
+            `answer が指す選択肢「${picked}」と食い違っています`,
+        );
+      }
+    }
+  }
+}
+
 // ---- 実際に描いてみる ----
 // 記法としては正しくても、描くと崩れている場合がある（強調の中の数式など）。
 for (const p of renderCheck()) err(p);
