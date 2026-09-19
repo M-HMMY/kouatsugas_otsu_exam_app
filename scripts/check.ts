@@ -992,6 +992,34 @@ for (const q of QUESTIONS) {
   }
 }
 
+// ---- 「前記イ」が後ろの記述を指していないか ----
+//
+// **記述の並べ替えをすると、ここが壊れる。**
+// 2026 年 9 月 20 日に、誤りの位置が「ニ」に 36 % 偏っていたのを直すため
+// 127 問の記述を並べ替えたとき、law-tech-14 の イ が「前記ハの措置は」と
+// **後ろの記述を指す**形になった。**「前記」なのに前にない。**
+// 向きを問わない書き方（「ハに掲げる」）なら、どこにあってもよい。
+{
+  const LETTERS = 'イロハニ';
+  for (const q of QUESTIONS) {
+    const parts = q.question.split(LF);
+    for (let pos = 1; pos < parts.length; pos += 1) {
+      const m = /^([イロハニ])．(.*)$/s.exec(parts[pos]);
+      if (!m) continue;
+      const here = LETTERS.indexOf(m[1]);
+      for (const ref of m[2].matchAll(/前記([イロハニ])/g)) {
+        const to = LETTERS.indexOf(ref[1]);
+        if (to >= here) {
+          err(
+            `問題 ${q.id}: 記述 ${m[1]} が「前記${ref[1]}」と書いているのに、` +
+              `${ref[1]} は${to === here ? '自分自身' : 'あと'}です`,
+          );
+        }
+      }
+    }
+  }
+}
+
 // ---- 実際に描いてみる ----
 // 記法としては正しくても、描くと崩れている場合がある（強調の中の数式など）。
 for (const p of renderCheck()) err(p);
