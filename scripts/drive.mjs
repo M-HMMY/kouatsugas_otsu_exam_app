@@ -517,6 +517,37 @@ show('確認問題の設定', (await visible()).slice(0, 500));
   show('確認問題', qReport.join('\n'));
 }
 
+// 法令の問題にだけ、本番と同じ前置きが出ているか。
+//
+// **check-source.mjs はソースの文字列しか見ていない。**実際に描かれているかは
+// ここでしか分からない。前置きが無いと、ただし書で例外が用意されている記述を
+// 「例外なく正しい」と言えなくなる（src/data/categories.ts の LAW_PREAMBLE を読むこと）。
+{
+  const report = [];
+  for (const [cat, want] of [['law-what', true], ['gk-state', false]]) {
+    await go(`#/practice?cat=${cat}`);
+    await sleep(400);
+    await click('問を開始する');
+    await sleep(700);
+    const found = await evaluate(
+      `(() => {
+         const el = document.querySelector('.law-preamble');
+         return el ? el.innerText.replace(/\\s+/g, ' ').slice(0, 60) : '';
+       })()`,
+    );
+    const ok = want ? found !== '' : found === '';
+    report.push(
+      `${cat}: 前置き ${found === '' ? 'なし' : 'あり'}` +
+        (ok ? '' : `  ★ ${want ? '出るはず' : '出ないはず'}`) +
+        (found === '' ? '' : `  「${found}…」`),
+    );
+    if (want && found !== '' && !/令和 8 年 4 月 1 日/.test(found)) {
+      report.push('  ★ 基準日が入っていない');
+    }
+  }
+  show('法令の前置き', report.join('\n'));
+}
+
 // 模試。**科目ごとの判定が出るのがこのアプリの要。**
 await go('#/mock');
 show('模試の設定', (await visible()).slice(0, 900));
