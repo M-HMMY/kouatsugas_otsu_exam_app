@@ -33,6 +33,13 @@ export default function KouatsuHantei(): JSX.Element {
 
   const kindName =
     kind === 'compressed' ? '圧縮ガス（アセチレンを除く）' : kind === 'acetylene' ? '圧縮アセチレンガス' : '液化ガス';
+  /**
+   * ★ 当たらないほうを言い切らないこと。
+   * ここで見ているのは法 2 条の第一号から第三号までで、**第四号（政令で定める液化ガス）を見ていない。**
+   * 第四号は、温度 35 度で圧力が 0 パスカルを超えるものが対象なので、
+   * 第三号を外れても、なお高圧ガスに当たることがある。
+   */
+  const goNumber = kind === 'compressed' ? '第一号' : kind === 'acetylene' ? '第二号' : '第三号';
 
   return (
     <div className="widget-body">
@@ -41,6 +48,7 @@ export default function KouatsuHantei(): JSX.Element {
       </div>
       <p className="widget-lead">
         法第 2 条は、ガスの状態ごとに別々の条件を置いています。ここでいう圧力は<strong>ゲージ圧力</strong>です。
+        ここで見るのは<strong>第一号から第三号まで</strong>で、第四号（政令で定める液化ガス）は扱いません。
       </p>
 
       <div className="widget-grid">
@@ -103,7 +111,7 @@ export default function KouatsuHantei(): JSX.Element {
       )}
 
       <div className={`widget-result ${hit ? 'tone-danger' : 'tone-safe'}`}>
-        {hit ? 'この法律でいう高圧ガスに当たります' : '高圧ガスには当たりません'}
+        {hit ? `法第 2 条${goNumber}の高圧ガスに当たります` : `法第 2 条${goNumber}の条件には当たりません`}
       </div>
 
       <ul className="widget-list">
@@ -124,7 +132,7 @@ export default function KouatsuHantei(): JSX.Element {
       <p className="widget-note">
         {kindName}の条件です。
         {kind === 'liquefied'
-          ? '★ 現在の圧力を 0.1 MPa まで下げても、0.2 MPa になる温度が 35 度以下なら高圧ガスのままです。現場の「圧力が高いガス」という感覚と、ここでずれます。'
+          ? '★ 現在の圧力を 0.1 MPa まで下げても、0.2 MPa になる温度が 35 度以下なら高圧ガスのままです。現場の「圧力が高いガス」という感覚と、ここでずれます。なお、この号を外れても、第四号（政令で定める液化ガス。温度 35 度で圧力が 0 パスカルを超えるもの）に当たることがあります。'
           : kind === 'acetylene'
             ? '★ 温度が 35 度ではなく 15 度である点だけが、ほかの号と違います。'
             : '★ 圧縮アセチレンガスは、この号から除かれて第二号で別に定められています。'}

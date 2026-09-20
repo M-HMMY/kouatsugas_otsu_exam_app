@@ -17,7 +17,12 @@ export default function UsunikuOuryoku(): JSX.Element {
   const hoop = (p * d) / (2 * t); // 円周応力
   const axial = (p * d) / (4 * t); // 軸応力
   const sphere = (p * d) / (4 * t); // 薄肉球形胴
-  const thin = t / d <= 0.1;
+  /*
+   * ★ 薄肉の目安は「半径に対して」で見る。
+   * t/d <= 0.1 だと、内径 200 mm・板厚 20 mm（半径 100 mm に対して 20 %）まで薄肉になってしまう。
+   * r/t >= 10、すなわち t/d <= 0.05 で見る。
+   */
+  const thin = t / d <= 0.05;
 
   return (
     <div className="widget-body">
@@ -78,8 +83,9 @@ export default function UsunikuOuryoku(): JSX.Element {
 
       {!thin && (
         <p className="widget-warn">
-          板厚が内径の {((t / d) * 100).toFixed(1)} パーセントになっています。
-          薄肉の目安（10 分の 1 程度以下）を外れると、この式は成り立ちません。
+          板厚が内半径の {((t / (d / 2)) * 100).toFixed(1)} パーセントになっています。
+          薄肉の目安（<strong>内半径の 10 分の 1 程度以下</strong>）を外れると、この式は成り立ちません。
+          厚肉では、板の内側と外側で応力が変わってきます。
         </p>
       )}
 

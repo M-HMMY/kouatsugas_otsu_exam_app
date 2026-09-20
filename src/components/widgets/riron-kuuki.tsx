@@ -13,6 +13,9 @@ export default function RironKuuki(): JSX.Element {
   const [x, setX] = useState(3); // 炭素の数
   const [y, setY] = useState(8); // 水素の数
 
+  /** ★ 炭素の原子価から、鎖状の炭化水素では y は 2x+2 を超えられない。 */
+  const real = y <= 2 * x + 2;
+
   const o2 = x + y / 4;
   const air = o2 / 0.21;
   /** 燃料 1 に対し空気 air のとき、燃料の占める割合 */
@@ -52,10 +55,18 @@ export default function RironKuuki(): JSX.Element {
         <span>{y}</span>
       </label>
 
-      <div className="widget-result tone-safe">
+      <div className={`widget-result ${real ? 'tone-safe' : 'tone-warn'}`}>
         C<sub>{x}</sub>H<sub>{y}</sub>
         {name ? `（${name}）` : ''} … 理論空気量は燃料の約 {air.toFixed(1)} 倍
       </div>
+
+      {!real && (
+        <p className="widget-warn">
+          C<sub>{x}</sub>H<sub>{y}</sub> は、炭素の手の数から実在しない組合せです
+          （鎖状の炭化水素では、水素の数は <strong>2x ＋ 2 ＝ {2 * x + 2}</strong> を超えられません）。
+          式の練習にはなりますが、このガスはありません。
+        </p>
+      )}
 
       <ul className="widget-list">
         <li className="passed">

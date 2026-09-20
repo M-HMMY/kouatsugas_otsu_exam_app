@@ -18,8 +18,11 @@ export default function BakuhatsuHani(): JSX.Element {
   const lo = Math.min(lel, uel);
   const hi = Math.max(lel, uel);
   const inside = c >= lo && c <= hi;
-  /** 化学量論組成のおおよその位置（範囲の中では、ここで燃焼速度が最大になる） */
-  const mid = (lo + hi) / 2;
+  /*
+   * ★ 範囲の中点から化学量論組成や燃焼速度の最大点は出せない。
+   * 下限界 5 %・上限界 95 % なら、ガスの種類にかかわらず 50 % が最大だと言うことになる。
+   * 最大の位置は燃料ごとに違うので、このウィジェットでは出さない。
+   */
 
   const state = inside ? '爆発範囲の中' : c < lo ? '下限界より薄い' : '上限界より濃い';
   const tone = inside ? 'tone-danger' : 'tone-safe';
@@ -55,7 +58,8 @@ export default function BakuhatsuHani(): JSX.Element {
       <ul className="widget-list">
         <li className={c < lo ? 'passed' : ''}>下限界より薄い … 燃料が足りず、火炎が伝ぱしない</li>
         <li className={inside ? 'passed' : ''}>
-          範囲の中 … 燃える。<strong>{mid.toFixed(1)} パーセント付近で燃焼速度が最大</strong>になりやすい
+          範囲の中 … 燃える。<strong>化学量論組成のあたりで燃焼速度が最大</strong>になるが、
+          その位置は下限界と上限界からは決まらない
         </li>
         <li className={c > hi ? 'passed' : ''}>上限界より濃い … 酸素が足りず、火炎が伝ぱしない</li>
       </ul>

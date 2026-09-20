@@ -25,7 +25,7 @@ const ARTICLES: { no: number; name: string }[] = [
   { no: 49, name: '容器再検査' },
   { no: 56, name: 'くず化その他の処分' },
   { no: 60, name: '帳簿' },
-  { no: 61, name: '立入検査等' },
+  { no: 61, name: '報告の徴収' },
   { no: 62, name: '立入検査' },
   { no: 63, name: '事故届' },
 ];
@@ -64,7 +64,7 @@ export default function TekiyouJogai(): JSX.Element {
           <tr>
             <th>条</th>
             <th>内容</th>
-            <th>適用</th>
+            <th>第 3 条第 2 項</th>
           </tr>
         </thead>
         <tbody>
@@ -74,7 +74,7 @@ export default function TekiyouJogai(): JSX.Element {
               <tr key={a.no}>
                 <td>第 {a.no} 条</td>
                 <td>{a.name}</td>
-                <td className={off ? 'miss' : 'hit'}>{off ? '適用しない' : '適用する'}</td>
+                <td className={off ? 'miss' : 'hit'}>{off ? 'この項で除外' : '除外されない'}</td>
               </tr>
             );
           })}
@@ -82,7 +82,12 @@ export default function TekiyouJogai(): JSX.Element {
       </table>
 
       <div className="widget-result tone-warn">
-        適用されない条は {on ? hidden.length : 0} 件。それ以外はふつうに適用されます
+        {/*
+          ★ この件数は「この表に挙げた代表例のうち」の件数。法律全体の除外条数ではない。
+          実際の範囲は第 40 条から第 56 条の 2 の 2 まで、第 60 条、第 61 条から第 63 条まで。
+        */}
+        この表の代表例のうち、適用されないのは {on ? hidden.length : 0} 件。
+        残りはこの項では除外されていません
       </div>
 
       <p className="widget-note">
@@ -90,6 +95,8 @@ export default function TekiyouJogai(): JSX.Element {
         <strong>第 60 条、第 61 条から第 63 条まで</strong>（第 5 章 雑則の一部）です。
         帳簿と事故届が入っているので、「第 4 章だけ」と覚えると外します。
         製造の許可も貯蔵所も保安検査も、この除外には入っていません。
+        <strong>表に出しているのは代表例だけ</strong>で、除外される条はこれより多くあります。
+        また、除外されない条がそのまま適用になるかどうかは、その条自身の条件で決まります。
       </p>
     </div>
   );
