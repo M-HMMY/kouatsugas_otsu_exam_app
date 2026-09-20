@@ -10,6 +10,9 @@ import type { TextbookSection } from '../../types';
  * ★ 数値は `docs/primary-numbers.md` を経由させる約束だが、気体定数・比熱比・
  * 爆発範囲は §16 のとおり台帳に無い。**だから例題では問題文の中で値を与えている**
  * （「比熱比を 1.4 とすると」の形）。台帳が埋まったら、ここを見直すこと。
+ *
+ * ★ この章に法令の数値は出てこないが、法令に触れるときは
+ *   **令和 8 年 4 月 1 日（基準日）現在**で確かめること。
  */
 export const gmThermo: TextbookSection[] = [
   {

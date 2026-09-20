@@ -8,6 +8,9 @@ import type { TextbookSection } from '../../types';
  *
  * ★ ヤング率・線膨張係数・許容応力は台帳（§16）に無い。
  * **例題では問題文の中で値を与え、実在の材料の規格値としては断定していない。**
+ *
+ * ★ この章に法令の数値は出てこないが、法令に触れるときは
+ *   **令和 8 年 4 月 1 日（基準日）現在**で確かめること。
  */
 export const gmStrength: TextbookSection[] = [
   {
