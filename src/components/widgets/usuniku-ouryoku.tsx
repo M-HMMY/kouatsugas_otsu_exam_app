@@ -35,7 +35,7 @@ export default function UsunikuOuryoku(): JSX.Element {
       </p>
 
       <label className="widget-slider">
-        <span>内圧</span>
+        <span>内外の圧力差</span>
         <input type="range" min={0.2} max={10} step={0.1} value={p} onChange={(e) => setP(Number(e.target.value))} />
         <span>{p.toFixed(1)} MPa</span>
       </label>

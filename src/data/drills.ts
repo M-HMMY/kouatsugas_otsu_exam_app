@@ -390,7 +390,7 @@ export const DRILLS: Drill[] = [
       const { choices, answer } = buildNumeric(s, fmt, [(p * d) / (4 * t), (p * d) / t, (p * d) / (8 * t)]);
       return {
         question:
-          '内径 ' + d + ' mm、板厚 ' + t + ' mm の薄肉円筒胴に、内圧 ' + fx(p, 1) +
+          '内径 ' + d + ' mm、板厚 ' + t + ' mm の薄肉円筒胴に、内外の圧力差 ' + fx(p, 1) +
           ' MPa が加わっている。この胴に生じる円周応力はおよそいくらか。',
         choices,
         answer,
