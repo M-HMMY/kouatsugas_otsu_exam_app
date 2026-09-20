@@ -1056,9 +1056,11 @@ for (const q of QUESTIONS) {
     return out;
   };
   const known = new Set(pairs(ledger).keys());
-  // **誤答に使う値は、わざと台帳と違えてある。**ここに挙げたものは見逃す。
+  // **見逃してよいもの。**理由を必ず書くこと。
   const allowed = new Set([
     '1 kg', // law-handle-1 の誤答。正しくは 10 キログラム（法 16 ③）
+    '9 pct', // 「9 % ニッケル鋼」は材料の呼び名。測った値ではない
+    '30 m3', // lw-43 の架空の事業所「琵琶湖東ガス充塡所」の設定値
   ]);
   for (const q of QUESTIONS) {
     if (!/^(law|ho)-/.test(q.categoryId)) continue;
@@ -1066,6 +1068,19 @@ for (const q of QUESTIONS) {
       if (known.has(key) || allowed.has(key)) continue;
       warn(
         `問題 ${q.id}: 「${shown}」が docs/primary-numbers.md に見当たりません。` +
+          `台帳に足すか、値を書かない形にすること`,
+      );
+    }
+  }
+  // **教本の側も見る。**確認問題だけ直して本文が古いまま、というのが
+  // 2 巡目でいちばん多く出た型なので、両方を同じ物差しで測る。
+  // 学識（`gk-` / `gm-`）は工学の数値なので、台帳の担当ではない（§16）。
+  for (const sec of SECTIONS) {
+    if (!/^(lw|ho)-/.test(sec.id)) continue;
+    for (const [key, shown] of pairs(sec.body)) {
+      if (known.has(key) || allowed.has(key)) continue;
+      warn(
+        `節 ${sec.id}: 「${shown}」が docs/primary-numbers.md に見当たりません。` +
           `台帳に足すか、値を書かない形にすること`,
       );
     }
