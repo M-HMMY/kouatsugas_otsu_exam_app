@@ -157,7 +157,15 @@ for (const q of QUESTIONS) {
         // 同じ公式を、理論の節と演習の節で**数値だけ変えて**出すのは意図した
         // 繰返しなので重複ではない（稼働率・損益分岐点・伝送時間など）。
         // 文面が似ていても、出てくる数が違えば別の問題として扱う。
-        if (sim >= 0.6 && !sameSection && rows[i].nums === rows[j].nums) {
+        // ★ 学識（化学）と学識（機械）は**別の試験**で、受験者はどちらか一方しか解かない。
+        // だから gk- と gm- のあいだで同じ論点が出ても、重複ではない。むしろ両方に要る。
+        // 重複が問題になるのは、**同じ受験者が両方を解く組合せ**だけ
+        // （法令と保安管理技術は両区分共通なので、それらと学識の重なりは重複として扱う）。
+        const field = (id: string): string => id.split('-')[0];
+        const crossDivision =
+          (field(rows[i].q.categoryId) === 'gk' && field(rows[j].q.categoryId) === 'gm') ||
+          (field(rows[i].q.categoryId) === 'gm' && field(rows[j].q.categoryId) === 'gk');
+        if (sim >= 0.6 && !sameSection && !crossDivision && rows[i].nums === rows[j].nums) {
           warn(
             `問題 ${rows[i].q.id} と ${rows[j].q.id} が別の節でほぼ同じ内容（類似度 ${sim.toFixed(2)}）。` +
               '片方の数値か観点を変える',
