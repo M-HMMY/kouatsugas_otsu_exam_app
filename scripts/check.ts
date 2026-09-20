@@ -1000,6 +1000,78 @@ for (const q of QUESTIONS) {
   }
 }
 
+// ---- 法令・保安管理技術の問題に、台帳を通していない数値が無いか ----
+//
+// **2026 年 9 月 20 日の 2 巡目で、自分がこれを破っているのを見つけたので足した。**
+// CLAUDE.md は「数値は docs/primary-numbers.md を経由させ、台帳に無い値は書かないこと」と
+// 書いてあるのに、**レビューの反映で「酸素濃度 18 パーセント以上 22 パーセント以下」を
+// 台帳を通さずに入れていた**（例示基準の値で、一般則には無い）。
+//
+// ★ 数字だけで照らし合わせてはいけない。**台帳には条番号も年月日も入っている**ので、
+//   「18」はどこかに必ずある。**「数値 ＋ 単位」の組**で照らすこと。
+// ★ 単位の表記ゆれを吸収すること。台帳は `MPa`、問題文は「メガパスカル」と書く。
+// ★ 対象は law- と ho- の問題だけ。**学識は工学の数値なので、台帳の担当ではない**（§16）。
+{
+  // ★ 台帳の「書きたかったが、台帳に無いので外した値」の節は読み飛ばす。
+  //   そこに「18 〜 22 パーセント」と書いてあるため、そのままだと
+  //   **外したはずの値が「台帳にある」ことになり、検査が自分で自分を無効にする。**
+  const ledgerRaw = existsSync('docs/primary-numbers.md')
+    ? readFileSync('docs/primary-numbers.md', 'utf8')
+    : '';
+  const DROP = '### ★ 書きたかったが、台帳に無いので外した値';
+  let ledger = ledgerRaw;
+  {
+    const from = ledgerRaw.indexOf(DROP);
+    if (from >= 0) {
+      const nextHead = ledgerRaw.indexOf('\n### ', from + DROP.length);
+      const to = nextHead < 0 ? ledgerRaw.length : nextHead;
+      ledger = ledgerRaw.slice(0, from) + ledgerRaw.slice(to);
+    }
+  }
+  /** 表記ゆれを 1 つに寄せる */
+  const UNITS: [RegExp, string][] = [
+    [/^(?:メガパスカル|MPa)$/, 'MPa'],
+    [/^(?:キロパスカル|kPa)$/, 'kPa'],
+    [/^(?:キログラム|kg)$/, 'kg'],
+    [/^(?:トン|t)$/, 't'],
+    [/^(?:立方メートル|m3|m³)$/, 'm3'],
+    [/^(?:デシリットル|dL)$/, 'dL'],
+    [/^(?:リットル|L)$/, 'L'],
+    [/^(?:センチメートル|cm)$/, 'cm'],
+    [/^(?:メートル|m)$/, 'm'],
+    [/^(?:パーセント|％|%)$/, 'pct'],
+    [/^(?:度|℃)$/, 'deg'],
+  ];
+  const UNIT_RE =
+    'メガパスカル|MPa|キロパスカル|kPa|キログラム|kg|トン|立方メートル|m3|m³|' +
+    'デシリットル|dL|リットル|L|センチメートル|cm|メートル|m|パーセント|％|%|度|℃';
+  /** 正規化したキー → 問題文に出てくる形。**注意文は読める形で出す。** */
+  const pairs = (text: string): Map<string, string> => {
+    const out = new Map<string, string>();
+    for (const m of text.matchAll(new RegExp(`([0-9][0-9,.]*)\\s*(${UNIT_RE})`, 'g'))) {
+      const num = m[1].replace(/,/g, '').replace(/\.$/, '');
+      const hit = UNITS.find(([re]) => re.test(m[2]));
+      out.set(`${num} ${hit ? hit[1] : m[2]}`, `${m[1]} ${m[2]}`);
+    }
+    return out;
+  };
+  const known = new Set(pairs(ledger).keys());
+  // **誤答に使う値は、わざと台帳と違えてある。**ここに挙げたものは見逃す。
+  const allowed = new Set([
+    '1 kg', // law-handle-1 の誤答。正しくは 10 キログラム（法 16 ③）
+  ]);
+  for (const q of QUESTIONS) {
+    if (!/^(law|ho)-/.test(q.categoryId)) continue;
+    for (const [key, shown] of pairs(q.question)) {
+      if (known.has(key) || allowed.has(key)) continue;
+      warn(
+        `問題 ${q.id}: 「${shown}」が docs/primary-numbers.md に見当たりません。` +
+          `台帳に足すか、値を書かない形にすること`,
+      );
+    }
+  }
+}
+
 // ---- 「前記イ」が後ろの記述を指していないか ----
 //
 // **記述の並べ替えをすると、ここが壊れる。**
