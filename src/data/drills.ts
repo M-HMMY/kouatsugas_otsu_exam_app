@@ -466,7 +466,7 @@ export const DRILLS: Drill[] = [
     name: '管内の圧力損失',
     categoryId: 'gm-flow',
     sectionId: 'gm-13',
-    summary: '圧力損失は流速の 2 乗に比例する',
+    summary: '乱流で摩擦係数が一定なら、圧力損失は流速の 2 乗に比例する',
     generate: () => {
       const dp1 = pick([20, 30, 50, 80, 100]);
       const k = pick([1.2, 1.5, 2, 2.5, 3, 0.5]);
@@ -481,7 +481,7 @@ export const DRILLS: Drill[] = [
         answer,
         explanation:
           '同じ管なので流量が ' + fx(k, 2) + ' 倍なら流速も ' + fx(k, 2) +
-          ' 倍になる。圧力損失は流速の 2 乗に比例するので、' + dp1 + ' × ' + fx(k, 2) + '² ＝ ' +
+          ' 倍になる。摩擦係数が変わらないので圧力損失は流速の 2 乗に比例し、' + dp1 + ' × ' + fx(k, 2) + '² ＝ ' +
           dp1 + ' × ' + fx(k * k, 2) + ' ＝ ' + fx(dp2, 1) + ' kPa。\n' +
           '1 乗と見て ' + fx(dp1 * k, 1) +
           ' kPa とするのが、ありがちな誤りである。増えかたのほうが大きい、という感覚を持っておくこと。',
