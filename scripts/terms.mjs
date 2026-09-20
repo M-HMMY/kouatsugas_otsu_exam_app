@@ -61,8 +61,54 @@ for (const [id, body] of questions) {
   }
 }
 
+// ---- その 2：解説だけが持っている「除外・限定」 ----
+//
+// ★ 確認問題の解説が条文の括弧書きを引いているのに、**その問の節の教本に無い**ことがあります。
+//   2026 年 9 月 20 日の 2 巡目で 1 件見つけました。`ho-safety-2` のイが
+//   一般則 6 ②一イのただし書（安全弁の止め弁を閉じてよい場合）を引いているのに、
+//   **教本は「元弁を閉めてはいけない」と言い切っていました。**
+//   **系譜でいちばん重い型（誤答が実は正しい）が、ここで起きます。**
+//
+// **16 件挙げて、実害は 1 件でした。**残りは言い回しの違いです（教本が「除かれます」と書いている等）。
+
+const sections = new Map();
+for (const f of readdirSync('src/data/textbook').filter((x) => x.endsWith('.ts'))) {
+  const t = readFileSync(join('src/data/textbook', f), 'utf8');
+  const re = /id: '([a-z]+-\d+)',/g;
+  let m;
+  while ((m = re.exec(t)) !== null) {
+    const i = t.indexOf('body: `', m.index);
+    const j = t.indexOf('`,', i + 8);
+    if (i > 0 && j > i) sections.set(m[1], t.slice(i + 7, j));
+  }
+}
+
+const limits = [];
+for (const f of readdirSync('src/data/questions').filter((x) => x.endsWith('.ts'))) {
+  const t = readFileSync(join('src/data/questions', f), 'utf8');
+  const re =
+    /id: '([a-z0-9-]+)',\s*\n\s*categoryId: '[^']+',\s*\n\s*sectionId: '([a-z]+-\d+)',([\s\S]*?)\n  \},/g;
+  let m;
+  while ((m = re.exec(t)) !== null) {
+    const body = sections.get(m[2]) ?? '';
+    const seen = new Set();
+    for (const w of m[3].matchAll(/([ぁ-んァ-ヴ一-龥ー・]{3,20})(?:を除く|に限る|を除き|に限り)/g)) {
+      if (seen.has(w[1]) || body.includes(w[1])) continue;
+      seen.add(w[1]);
+      limits.push([m[1], m[2], w[1]]);
+    }
+  }
+}
+
 const rows = [...found.entries()].sort((a, b) => a[0].localeCompare(b[0], 'ja'));
 for (const [w, ids] of rows) {
   console.log(`${w.padEnd(14, '　')} ${[...ids].sort().join('、')}`);
 }
 console.log(`\n${rows.length} 語（★ 多くは断片。意味のある語だけ拾うこと）`);
+
+console.log('');
+console.log('===== 解説だけが持っている除外・限定 =====');
+for (const [qid, sec, w] of limits) {
+  console.log(`  ${qid.padEnd(14, '　')} 節 ${sec.padEnd(7, ' ')} 「${w}」`);
+}
+console.log(`\n${limits.length} 件（★ ほとんどは言い回しの違い。条文の括弧書きだけ拾うこと）`);
