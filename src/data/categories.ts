@@ -67,7 +67,6 @@ export const FIELDS: { id: FieldId; name: string; note: string; questions: numbe
   },
 ];
 
-const TODO = '**この章はまだ書かれていません。**節割りと数値の台帳ができ次第、書きます（`docs/section-plan.md`）。';
 
 /**
  * 章の一覧。**`questions` は令和 7 年度の公開問題を 1 問ずつ章へ割り当てて数えたもの。**
@@ -98,7 +97,7 @@ export const CATEGORIES: Category[] = [
     summary: '法の目的、高圧ガスの定義、適用除外',
     syllabus: '法令（法 1〜3／令 1〜2／一般則 2）',
     questions: 2,
-    intro: TODO,
+    intro: '法の目的、高圧ガスの定義、適用除外です。**法令 20 問の入口で、令和 7 年度は 2 問ありました。**定義は「圧力と温度の組合せ」で決まり、圧縮アセチレンだけ温度が 15 度です。適用除外は、除かれる条の範囲まで読んでください。',
   },
   {
     id: 'law-permit',
@@ -107,7 +106,7 @@ export const CATEGORIES: Category[] = [
     summary: '第一種製造者と第二種製造者、変更の許可、完成検査、承継と廃止',
     syllabus: '法令（法 5〜14・20・21／一般則 3〜17・31〜36）',
     questions: 2,
-    intro: TODO,
+    intro: '第一種製造者と第二種製造者の境目、変更の許可と軽微な変更、完成検査、承継と廃止です。令和 7 年度は 2 問ありました。**許可・届出・認可のどれか、事前か事後か**が、そのまま設問になります。承継の事由は第一種と第二種で違います。',
   },
   {
     id: 'law-handle',
@@ -116,7 +115,7 @@ export const CATEGORIES: Category[] = [
     summary: '貯蔵所、販売の届出、移動の基準、特定高圧ガスの消費、廃棄、輸入検査、帳簿',
     syllabus: '法令（法 15〜25／一般則 18〜30・45〜62／液石則）',
     questions: 2,
-    intro: TODO,
+    intro: '貯蔵所、販売の届出、移動の基準、特定高圧ガスの消費、廃棄、輸入検査、帳簿です。令和 7 年度は 2 問ありました。**扱う場面ごとに規制が並ぶ章**なので、数量のしきい値と「誰の義務か」を組で覚えてください。',
   },
   {
     id: 'law-people',
@@ -125,7 +124,7 @@ export const CATEGORIES: Category[] = [
     summary: '保安統括者から保安係員まで、危害予防規程、保安教育計画、保安検査と定期自主検査',
     syllabus: '法令（法 26〜39／一般則 63〜83 の 2）',
     questions: 3,
-    intro: TODO,
+    intro: '保安統括者から保安係員までの選任と職務、危害予防規程、保安教育計画、保安検査と定期自主検査です。令和 7 年度は 3 問ありました。**免状と経験の要件は役職ごとに違い、保安統括者には要りません。**',
   },
   {
     id: 'law-vessel',
@@ -134,7 +133,7 @@ export const CATEGORIES: Category[] = [
     summary: '容器検査、刻印と表示、充塡、容器再検査、附属品検査',
     syllabus: '法令（法 40〜49／容器則）',
     questions: 2,
-    intro: TODO,
+    intro: '容器検査、刻印と表示、充塡の条件、容器再検査、附属品検査です。令和 7 年度は 2 問ありました。**容器再検査の期間は容器の種類と経過年数で変わります。**一律ではないところを表で押さえてください。',
   },
   {
     id: 'law-tech',
@@ -143,7 +142,7 @@ export const CATEGORIES: Category[] = [
     summary: '保安距離、貯槽、配管と導管、安全装置、耐震、ガスの種類で変わる規制',
     syllabus: '法令（一般則 6 ほか／コンビ則）',
     questions: 5,
-    intro: TODO,
+    intro: '製造施設の位置・構造・設備の基準です。保安距離、貯槽、安全装置、耐震、ガスの種類で変わる規制を扱います。**令和 7 年度は 5 問で、次の章と合わせると 9 問ありました。**距離の数値には、除外と限定が付いています。',
   },
   {
     id: 'law-ope',
@@ -152,7 +151,7 @@ export const CATEGORIES: Category[] = [
     summary: '充塡のしかた、修理と作業計画、容器置場、除害と防爆',
     syllabus: '法令（一般則 6 第 2 項ほか）',
     questions: 4,
-    intro: TODO,
+    intro: '製造の方法の基準です。圧縮してはいけない組成、充塡のしかた、修理・清掃の手順、容器置場の扱いを扱います。令和 7 年度は 4 問ありました。**根拠は一般高圧ガス保安規則第 6 条の第 2 項**で、第 1 項（設備の基準）と条が同じで項が違います。',
   },
 
   // ---- 保安管理技術（本番 15 問。**両区分で共通**）----
@@ -166,7 +165,7 @@ export const CATEGORIES: Category[] = [
     summary: '爆発限界と消炎距離、可燃性・毒性・支燃性・不活性の別、ガスごとの扱い',
     syllabus: '保安管理技術（R7 問 1・2）',
     questions: 2,
-    intro: TODO,
+    intro: '燃焼・爆発とガスの性質です。爆発範囲と消炎距離、可燃性・毒性・不活性の区別、ガスごとの扱いを扱います。令和 7 年度は 2 問ありました。',
   },
   {
     id: 'ho-material',
@@ -175,7 +174,7 @@ export const CATEGORIES: Category[] = [
     summary: '腐食と粒界腐食、エロージョン、非破壊検査（超音波・浸透・渦電流）、気密試験',
     syllabus: '保安管理技術（R7 問 3・15）',
     questions: 2,
-    intro: TODO,
+    intro: '材料の劣化と、設備の検査・診断です。腐食の形、エロージョン、非破壊検査の原理と向き不向き、気密試験を扱います。令和 7 年度は 2 問ありました。',
   },
   {
     id: 'ho-inst',
@@ -184,7 +183,7 @@ export const CATEGORIES: Category[] = [
     summary: 'フィードバック制御とフール・プルーフ、流量計、防爆構造、ボンディングと非常用電源',
     syllabus: '保安管理技術（R7 問 4・10）',
     questions: 2,
-    intro: TODO,
+    intro: '計測機器・計装と電気設備です。フィードバック制御とフール・プルーフ、流量計、防爆構造、ボンディングと非常用電源を扱います。令和 7 年度は 2 問ありました。',
   },
   {
     id: 'ho-device',
@@ -193,7 +192,7 @@ export const CATEGORIES: Category[] = [
     summary: '反応器・貯槽・吸収塔、圧縮機のサージングと容量調整、ポンプと流動・伝熱・分離',
     syllabus: '保安管理技術（R7 問 5・6・7）',
     questions: 3,
-    intro: TODO,
+    intro: '高圧装置、圧縮機、ポンプと流動・伝熱・分離です。反応器や貯槽、圧縮機のサージングと容量調整を扱います。令和 7 年度は 3 問ありました。',
   },
   {
     id: 'ho-seal',
@@ -202,7 +201,7 @@ export const CATEGORIES: Category[] = [
     summary: 'ガスケットとパッキン、フランジの締付け、各種シールの使い分け',
     syllabus: '保安管理技術（R7 問 8）',
     questions: 1,
-    intro: TODO,
+    intro: '流体の漏えい防止です。ガスケットとパッキン、フランジの締付け、回転軸のシールの使い分けを扱います。令和 7 年度は 1 問でした。',
   },
   {
     id: 'ho-safety',
@@ -211,7 +210,7 @@ export const CATEGORIES: Category[] = [
     summary: '安全弁と破裂板、緊急遮断装置、ガス漏えい検知警報設備、フレアースタック、除害',
     syllabus: '保安管理技術（R7 問 11・12）',
     questions: 2,
-    intro: TODO,
+    intro: '保安装置と防災設備です。安全弁と破裂板、緊急遮断装置、ガス漏えい検知警報設備、フレアースタック、除害を扱います。令和 7 年度は 2 問ありました。',
   },
   {
     id: 'ho-manage',
@@ -220,7 +219,7 @@ export const CATEGORIES: Category[] = [
     summary: 'ハザードの特定と HAZOP・ETA、運転操作、置換と火気工事、保全計画',
     syllabus: '保安管理技術（R7 問 9・13・14）',
     questions: 3,
-    intro: TODO,
+    intro: 'リスクマネジメントと、運転・設備・工事の管理です。ハザードの特定、運転操作、置換と火気工事、保全の計画を扱います。令和 7 年度は 3 問ありました。',
   },
 
   // ---- 学識（化学）（本番 15 問。乙種化学だけ）----
@@ -233,7 +232,7 @@ export const CATEGORIES: Category[] = [
     summary: 'SI 単位、状態方程式と密度、圧縮係数、断熱変化とジュール-トムソン効果',
     syllabus: '学識（化学）（R7 問 1〜4）',
     questions: 4,
-    intro: TODO,
+    intro: '乙種化学の学識です。SI 単位、状態方程式と密度、圧縮係数、断熱変化を扱います。**令和 7 年度は 4 問ありました。**単位をそろえてから式に入れる手順を、ここで固めてください。',
   },
   {
     id: 'gk-react',
@@ -242,7 +241,7 @@ export const CATEGORIES: Category[] = [
     summary: '活性化エネルギーとアレニウスの式、反応式の係数、平衡定数とルシャトリエ',
     syllabus: '学識（化学）（R7 問 5〜7）',
     questions: 3,
-    intro: TODO,
+    intro: '乙種化学の学識です。活性化エネルギーとアレニウスの式、反応式の係数、平衡定数とルシャトリエの原理を扱います。令和 7 年度は 3 問ありました。**温度や圧力を変えると、どちらへ動くか**を言えるようにします。',
   },
   {
     id: 'gk-burn',
@@ -251,7 +250,7 @@ export const CATEGORIES: Category[] = [
     summary: '理論空気量、消炎距離、爆発限界と爆発範囲、分解爆発、爆燃と爆ごう',
     syllabus: '学識（化学）（R7 問 8〜13）',
     questions: 6,
-    intro: TODO,
+    intro: '乙種化学の学識です。理論空気量、消炎距離、爆発限界と爆発範囲、分解爆発、爆燃と爆ごうを扱います。**令和 7 年度は 6 問で、学識の中でいちばん多い章でした。**',
   },
   {
     id: 'gk-gas',
@@ -260,7 +259,7 @@ export const CATEGORIES: Category[] = [
     summary: '酸素、水素、アセチレン、アンモニア、シランなどを 1 つずつ',
     syllabus: '学識（化学）（R7 問 14・15）',
     questions: 2,
-    intro: TODO,
+    intro: '乙種化学の学識です。酸素・水素・アセチレン・アンモニア・シランなど、個別のガスの性質を 1 つずつ扱います。令和 7 年度は 2 問ありました。',
   },
 
   // ---- 学識（機械）（本番 15 問。乙種機械だけ）----
@@ -273,7 +272,7 @@ export const CATEGORIES: Category[] = [
     summary: 'SI 単位、理想気体の状態変化、熱と仕事、熱力学第二法則、化学量論組成',
     syllabus: '学識（機械）（R7 問 1〜5）',
     questions: 5,
-    intro: TODO,
+    intro: '乙種機械の学識です。SI 単位、理想気体の状態変化、熱と仕事、熱力学第二法則、化学量論組成を扱います。**令和 7 年度は 5 問で、学識の中でいちばん多い章でした。**',
   },
   {
     id: 'gm-flow',
@@ -282,7 +281,7 @@ export const CATEGORIES: Category[] = [
     summary: 'レイノルズ数、圧力損失とファニングの式、放射伝熱と総括伝熱係数、吸収と蒸留',
     syllabus: '学識（機械）（R7 問 6・7）',
     questions: 2,
-    intro: TODO,
+    intro: '乙種機械の学識です。レイノルズ数、圧力損失とファニングの式、放射伝熱と総括伝熱係数、吸収と蒸留を扱います。令和 7 年度は 2 問ありました。**何に比例するか**を、式から言えるようにします。',
   },
   {
     id: 'gm-strength',
@@ -291,7 +290,7 @@ export const CATEGORIES: Category[] = [
     summary: '応力とひずみ、熱応力、S-N 曲線、薄肉円筒胴と薄肉球形胴に働く応力',
     syllabus: '学識（機械）（R7 問 8・9）',
     questions: 2,
-    intro: TODO,
+    intro: '乙種機械の学識です。応力とひずみ、熱応力、S-N 曲線、薄肉円筒胴と薄肉球形胴に働く応力を扱います。令和 7 年度は 2 問ありました。',
   },
   {
     id: 'gm-material',
@@ -300,7 +299,7 @@ export const CATEGORIES: Category[] = [
     summary: '応力腐食割れ、水素侵食、粒界腐食、高温割れと低温割れ、溶接法',
     syllabus: '学識（機械）（R7 問 10・11）',
     questions: 2,
-    intro: TODO,
+    intro: '乙種機械の学識です。応力腐食割れ、水素侵食、粒界腐食、溶接の高温割れと低温割れ、溶接法を扱います。令和 7 年度は 2 問ありました。',
   },
   {
     id: 'gm-device',
@@ -309,7 +308,7 @@ export const CATEGORIES: Category[] = [
     summary: '熱交換器と弁、液面計と流量計と温度計、NPSH と水撃作用、メカニカルシール',
     syllabus: '学識（機械）（R7 問 12〜15）',
     questions: 4,
-    intro: TODO,
+    intro: '乙種機械の学識です。熱交換器と弁、液面計・流量計・温度計、ポンプの NPSH と水撃作用、メカニカルシールを扱います。令和 7 年度は 4 問ありました。',
   },
 ];
 
