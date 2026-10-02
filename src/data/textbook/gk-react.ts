@@ -144,16 +144,16 @@ export const gkReact: TextbookSection[] = [
 
 # 標準生成エンタルピーを部品表として使います
 
-**標準生成エンタルピー** $\\Delta_{\\mathrm f}H^\\circ$ は、各元素について基準となる単体から、標準状態の化合物 1 mol が生成するときのエンタルピー変化です。基準となる単体には、通常、その元素が標準状態で安定に存在する形を選びます。「1 mol」は化学反応式全体ではなく、**生成する化合物 1 mol**に掛かります。
+**標準生成エンタルピー** $\\Delta_{\\mathrm f}H^{\\circ}$ は、各元素について基準となる単体から、標準状態の化合物 1 mol が生成するときのエンタルピー変化です。基準となる単体には、通常、その元素が標準状態で安定に存在する形を選びます。「1 mol」は化学反応式全体ではなく、**生成する化合物 1 mol**に掛かります。
 
 最重要の約束は、**基準に選んだ単体の標準生成エンタルピーを 0 とする**ことです。これは「単体にはエネルギーがない」という意味ではありません。計算の基準をそこに置く、という約束です。同じ元素の単体でも、基準とは異なる形まで一律に 0 とするわけではありません。
 
 反応物と生成物を、それぞれ単体から組み立てる経路に分けると、反応エンタルピーは次の式で求められます。
 
 \`\`\`math
-\\Delta_{\\mathrm r}H^\\circ
-= \\sum \\nu\\Delta_{\\mathrm f}H^\\circ(\\text{生成物})
-- \\sum \\nu\\Delta_{\\mathrm f}H^\\circ(\\text{反応物})
+\\Delta_{\\mathrm r}H^{\\circ}
+= \\sum \\nu\\Delta_{\\mathrm f}H^{\\circ}(\\text{生成物})
+- \\sum \\nu\\Delta_{\\mathrm f}H^{\\circ}(\\text{反応物})
 \`\`\`
 
 $\\nu$ は反応式の係数です。$\\sum$ は該当する物質について足し合わせる、という記号です。覚え方は、**生成物の和 − 反応物の和**です。
@@ -169,11 +169,11 @@ a\\mathrm{A} + b\\mathrm{B} \\rightarrow c\\mathrm{C} + d\\mathrm{D}
 なら、
 
 \`\`\`math
-\\Delta_{\\mathrm r}H^\\circ
-= c\\Delta_{\\mathrm f}H^\\circ(\\mathrm C)
-+ d\\Delta_{\\mathrm f}H^\\circ(\\mathrm D)
-- a\\Delta_{\\mathrm f}H^\\circ(\\mathrm A)
-- b\\Delta_{\\mathrm f}H^\\circ(\\mathrm B)
+\\Delta_{\\mathrm r}H^{\\circ}
+= c\\Delta_{\\mathrm f}H^{\\circ}(\\mathrm C)
++ d\\Delta_{\\mathrm f}H^{\\circ}(\\mathrm D)
+- a\\Delta_{\\mathrm f}H^{\\circ}(\\mathrm A)
+- b\\Delta_{\\mathrm f}H^{\\circ}(\\mathrm B)
 \`\`\`
 
 です。次の順で書けば、符号の事故が減ります。
